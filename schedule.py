@@ -58,7 +58,7 @@ class Schedule:
                         if aClass.get_instructor() == anotherClass.get_instructor():
                             self._numberOfConflicts += 1
 
-        return 1 / (self._numberOfConflicts + 1)
+        return 1 / (1.0 * self._numberOfConflicts + 1)
 
     def __str__(self):
         returnValue = ""

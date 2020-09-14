@@ -6,3 +6,4 @@ class Room:
         self._seatingCapacity = seatingCapacity
 
     def get_seatingCapacity(self): return self._seatingCapacity
+    def get_number(self): return self._number
