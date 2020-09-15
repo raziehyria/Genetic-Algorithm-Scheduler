@@ -1,6 +1,7 @@
 from .course import Course
 from .department import Department
 from .meetingtime import MeetingTime
+from .instructor import Instructor
 from .room import Room
 
 
@@ -30,7 +31,7 @@ class Data:
         for meetingTime in self.MEETING_TIMES:
             self._meetingTimes.append(MeetingTime(meetingTime[0], meetingTime[1]))
         for instructor in self.INSTRUCTORS:
-            self._instructors.append(instructor)
+            self._instructors.append(Instructor(instructor[0], instructor[1]))
 
         course1 = Course('C1', 'CMPSC 131', [self._instructors[0], self._instructors[1]], 25)
         course2 = Course('C2', 'CMPSC 132', [self._instructors[0], self._instructors[1]], 25)

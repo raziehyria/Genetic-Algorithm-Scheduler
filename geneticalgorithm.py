@@ -9,7 +9,7 @@ class GeneticAlgorithm:
     def __init__(self, config):
         self._config = config
 
-    def evlove(self, population):
+    def evolve(self, population):
         population = self._mutate_population(self._crossover_population(population))
         population.get_schedules().sort(key=lambda x: x.get_fitness(), reverse=True)
         return population
