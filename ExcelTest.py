@@ -1,29 +1,38 @@
-import xlrd
 import pprint
 
+import excel2json
+import xlrd
+
+# should we use JSON instead?
+# https://www.journaldev.com/33335/python-excel-to-json-conversion
+
+
+excel2json.convert_from_file('ClassList.xlsx')
+
+# MeetingTime = []
+# read the JSON file
+# for each item in JSON obj:
+#    meetingtime = MeetingTime(item.get('MX), item.get('BLD'), ..)
+#    MeetingTime.append(meetingtime)
+
 wb = xlrd.open_workbook("ClassList.xlsx")
-sheet = wb.sheet_by_index(0)
-sheet.cell_value(0,0)
+current_sheet = wb.sheet_by_index(0)
+current_sheet.cell_value(0, 0)
 
-
-rows = sheet.nrows
 
 courseDetailsList = []
+roomDetailsList = []
 
-for row in range(rows):
-    courseDetailsList.append(sheet.row_values(row))
+for row in range(current_sheet.nrows):
+    courseDetailsList.append(current_sheet.row_values(row))
 
 pprint.pprint(courseDetailsList)
 
-sheet2 = wb.sheet_by_index(1)
-sheet.cell_value(0,0)
+current_sheet = wb.sheet_by_index(1)
+current_sheet.cell_value(0, 0)
 
-
-totalRowsSheet2 = sheet2.nrows
-
-roomDetailsList = []
-for rowSheet2 in range(totalRowsSheet2):
-    roomDetailsList.append(sheet2.row_values(rowSheet2))
+for rowSheet2 in range(current_sheet.nrows):
+    roomDetailsList.append(current_sheet.row_values(rowSheet2))
 
 
 pprint.pprint(roomDetailsList)
