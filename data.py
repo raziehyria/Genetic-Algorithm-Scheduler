@@ -1,8 +1,13 @@
-from .course import Course
-from .department import Department
-from .meetingtime import MeetingTime
-from .instructor import Instructor
-from .room import Room
+import json
+
+import pandas
+
+from classroom import Classroom
+from course import Course
+from department import Department
+from instructor import Instructor
+from meetingtime import MeetingTime
+from room import Room
 
 
 class Data:
@@ -22,9 +27,20 @@ class Data:
     ]
 
     def __init__(self):
-        self._rooms = []
+        self._rooms = []  # TODO: remove
+        self._classrooms = []
         self._meetingTimes = []
         self._instructors = []
+
+        # using Pandas as it does not create JSON files fron excel instead does it in-memory
+        # source: https://www.journaldev.com/33335/python-excel-to-json-conversion
+        excel_data_df = pandas.read_excel('ClassList.xlsx', sheet_name='Classroom Capacities')
+        json_str = excel_data_df.to_json(orient='records')
+        classroom_rows = json.loads(json_str)
+
+        for each_class in classroom_rows:
+            self._classrooms.append(Classroom(each_class.get('BLDG'), each_class.get("RM"), each_class.get("MX"),
+                                              each_class.get("TYPE")))
 
         for room in self.ROOMS:
             self._rooms.append(Room(room[0], room[1]))

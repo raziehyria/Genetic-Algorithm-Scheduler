@@ -1,5 +1,6 @@
 import prettytable
-from cs.config import Config
+
+from config import Config
 
 
 class DisplayMgr:

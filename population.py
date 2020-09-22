@@ -1,5 +1,5 @@
-from .config import Config
-from .schedule import Schedule
+from config import Config
+from schedule import Schedule
 
 
 class Population:

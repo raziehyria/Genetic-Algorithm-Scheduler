@@ -1,7 +1,7 @@
-from cs.config import Config
-from cs.geneticalgorithm import GeneticAlgorithm
-from cs.population import Population
-from cs.display import DisplayMgr
+from config import Config
+from display import DisplayMgr
+from geneticalgorithm import GeneticAlgorithm
+from population import Population
 
 config = Config()
 display_manager = DisplayMgr()
