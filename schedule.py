@@ -1,7 +1,7 @@
 import random as rnd
 
-from .classclass import Class
-from .config import Config
+from classclass import Class
+from config import Config
 
 
 class Schedule:

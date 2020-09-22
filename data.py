@@ -1,8 +1,8 @@
-from .course import Course
-from .department import Department
-from .meetingtime import MeetingTime
-from .instructor import Instructor
-from .room import Room
+from course import Course
+from department import Department
+from meetingtime import MeetingTime
+from instructor import Instructor
+from room import Room
 
 
 class Data:

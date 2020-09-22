@@ -1,7 +1,7 @@
 import random as rnd
 
-from .population import Population
-from .schedule import Schedule
+from population import Population
+from schedule import Schedule
 
 
 class GeneticAlgorithm:
