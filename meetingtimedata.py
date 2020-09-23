@@ -6,10 +6,10 @@ import pprint
 class MeetingTimeData:
 
     def __init__(self):
-        meetingTimeData = pandas.read_excel('MeetingTimes.xlsx', sheet_name='Sheet1')
+        meetingTimeData = pandas.read_excel('Course list and attributes.xlsx', sheet_name='Meeting Times')
         json_str = meetingTimeData.to_json()
         data = json.loads(json_str)
-        meeting_times = []
+        self.meeting_times = []
 
         data_keys = data.keys()
         for each_key in data_keys:
@@ -19,7 +19,7 @@ class MeetingTimeData:
                     if each_time_slot is None or "Common Break" in each_time_slot :
                         continue
                     else:
-                        meeting_times.append((MeetingTime(each_day, duration, each_time_slot)))
+                        self.meeting_times.append((MeetingTime(each_day, duration, each_time_slot)))
 
     def parse_days(self, days_duration_string):
         """
@@ -38,5 +38,8 @@ class MeetingTimeData:
 
         return all_the_days, duration
 
+    def get_meetingTimes(self):
+        return self.meeting_times
 
-obj = MeetingTimeData()
+
+#obj = MeetingTimeData()

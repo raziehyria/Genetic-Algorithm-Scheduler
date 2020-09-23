@@ -9,57 +9,39 @@ class DisplayMgr:
 
     def print_available_data(self):
         print("> All Available Data")
-        self.print_dept()
         self.print_course()
-        self.print_room()
-        self.print_instructor()
+        self.print_classrooms()
         self.print_meeting_times()
 
-    def print_dept(self):
-        depts = self.data.get_depts()
-        availableDeptsTable = prettytable.PrettyTable(["dept", "courses"])
-        for i in range(0, len(depts)):
-            courses = depts.__getitem__(i).get_courses()
-            tempStr = "["
-            for j in range(0, len(courses) - 1):
-                tempStr += courses[j].__str__() + ", "
-            tempStr += courses[len(courses) - 1].__str__() + "]"
-            availableDeptsTable.add_row([depts.__getitem__(i).get_name(), tempStr])
-        print(availableDeptsTable)
-
     def print_course(self):
-        availableCoursesTable = prettytable.PrettyTable(["id", "course #", "max # of students", "instructors"])
+        coursesTable = prettytable.PrettyTable(
+            ["subject", "number", "description", "meetingPattern", "maxNumOfStudents",
+             "preReqs", "coReqs", "potentialConflicts", "mutuallyExclusives", "roomIn"])
         courses = self.data.get_courses()
         for i in range(0, len(courses)):
-            instructors = courses[i].get_instructors()
-            tempStr = ""
-            for j in range(0, len(instructors) - 1):
-                tempStr += instructors[j].__str__() + ", "
-            tempStr += instructors[len(instructors) - 1].__str__()
-            availableCoursesTable.add_row(
-                [courses[i].get_number(), courses[i].get_name(), str(courses[i].get_maxNumOfStudents()), tempStr])
-        print(availableCoursesTable)
+            coursesTable.add_row(
+                [courses[i].get_subject(), courses[i].get_number(), courses[i].get_description(),
+                 courses[i].get_meetingPattern(),
+                 courses[i].get_maxNumOfStudents(), courses[i].get_prerequisites(), courses[i].get_corequisites(),
+                 courses[i].get_potentialConflicts(),
+                 courses[i].get_mutuallyExclusives(), courses[i].get_roomIn()])
+        print(coursesTable)
 
-    def print_instructor(self):
-        availableInstructorsTable = prettytable.PrettyTable(["id", "instructor"])
-        instructors = self.data.get_instructors()
-        for i in range(0, len(instructors)):
-            availableInstructorsTable.add_row([instructors[i].get_id(), instructors[i].get_name()])
-        print(availableInstructorsTable)
-
-    def print_room(self):
-        availableRoomsTable = prettytable.PrettyTable(["room #", "max seating capacity"])
-        rooms = self.data.get_rooms()
-        for i in range(0, len(rooms)):
-            availableRoomsTable.add_row([str(rooms[i].get_number()), str(rooms[i].get_seatingCapacity())])
-        print(availableRoomsTable)
+    def print_classrooms(self):
+        classroomsTable = prettytable.PrettyTable(["building", "room", "max_capacity", "room_type"])
+        classrooms = self.data.get_classrooms()
+        for i in range(0, len(classrooms)):
+            classroomsTable.add_row([str(classrooms[i].get_building()), str(classrooms[i].get_room()),
+                                     str(classrooms[i].get_max_capacity()), str(classrooms[i].get_type())])
+        print(classroomsTable)
 
     def print_meeting_times(self):
-        availableMeetingTimeTable = prettytable.PrettyTable(["rid", "Meeting Time"])
+        meetingTimesTable = prettytable.PrettyTable(["days", "duration", "time"])
         meetingTimes = self.data.get_meetingTimes()
         for i in range(0, len(meetingTimes)):
-            availableMeetingTimeTable.add_row([meetingTimes[i].get_id(), meetingTimes[i].get_time()])
-        print(availableMeetingTimeTable)
+            meetingTimesTable.add_row(
+                [meetingTimes[i].get_days(), meetingTimes[i].get_duration(), meetingTimes[i].get_time()])
+        print(meetingTimesTable)
 
     def print_generation(self,
                          population):  # some parts of this function could be missing, some of the code cut off in the video
@@ -88,3 +70,9 @@ class DisplayMgr:
                            classes[i].get_meetingTime().get_time() + " (" + str(
                                classes[i].get_meetingTime().get_id()) + ")"])
         print(table)
+
+# test code:
+# test = DisplayMgr()
+# test.print_course()
+# test.print_meeting_times()
+# test.print_classrooms()
