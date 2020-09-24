@@ -4,7 +4,6 @@
 
 import pandas
 import json
-import re
 from course import Course
 import re
 
@@ -160,6 +159,8 @@ class CourseData():
 
         return possible_courses
 
+    def get_courses(self):
+        return self.courses
 
 
 
@@ -167,9 +168,8 @@ class CourseData():
 
 
 
-
-courseData = CourseData()
-print('DONE')
+#courseData = CourseData()
+#print('DONE')
 
 """for i, course in enumerate(courseData.courses):
     # print(course)
