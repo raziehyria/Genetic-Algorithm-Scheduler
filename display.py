@@ -72,7 +72,7 @@ class DisplayMgr:
         print(table)
 
 # test code:
-# test = DisplayMgr()
-# test.print_course()
-# test.print_meeting_times()
-# test.print_classrooms()
+test = DisplayMgr()
+test.print_course()
+test.print_meeting_times()
+test.print_classrooms()
