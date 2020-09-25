@@ -71,8 +71,4 @@ class DisplayMgr:
                                classes[i].get_meetingTime().get_id()) + ")"])
         print(table)
 
-# test code:
-test = DisplayMgr()
-test.print_course()
-test.print_meeting_times()
-test.print_classrooms()
+

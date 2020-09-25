@@ -2,7 +2,7 @@ class Course:
     """"""
 
     def __init__(self, subject, number, description, meetingPattern, maxNumOfStudents,
-                 preReqs, coReqs, potentialConflicts, mutuallyExclusives, roomIn):
+                 preReqs, coReqs, potentialConflicts, mutuallyExclusives, roomIn, sections, concurrent_max):
         self._subject = subject
         self._number = number
         self._descr = description
@@ -13,6 +13,8 @@ class Course:
         self._potentialConflicts = potentialConflicts
         self._mutuallyExclusives = mutuallyExclusives
         self._roomIn = roomIn
+        self._sections = sections
+        self._concurrent_max = concurrent_max
 
         self._name = subject + " " + str(number)
 
@@ -44,6 +46,10 @@ class Course:
     def set_prerequisites(self, prereqs): self._preReqs = prereqs
 
     def set_potentialConflicts(self, conflicts): self._potentialConflicts = conflicts
+
+    def get_num_of_sections(self): return self._sections
+
+    def get_concurrency__max(self): return self._concurrent_max
 
     def __str__(self):
         return ("Name: " + self.get_name() + " Subject: "+ self.get_subject() + " Number: " + self.get_number() + " Description: " +

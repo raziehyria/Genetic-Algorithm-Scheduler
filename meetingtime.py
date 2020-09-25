@@ -12,5 +12,7 @@ class MeetingTime:
 
     def get_duration(self): return self._duration
 
+    def get_meetingTime(self): return self._days + " " + self._time
+
     def __str__(self):
         return "{} {}".format(self._days, self._time)

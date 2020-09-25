@@ -1,4 +1,4 @@
-from data import Data
+from componentdata import Data
 
 
 class Config:
@@ -19,6 +19,7 @@ class Config:
         if Config.__singletonConfig is not None:
             raise Exception("This is a singleton class, cannot instantiate")
         else:
+            self.INPUT_FILE_PATH = input("Please provide the full path to the input file")
             self._POPULATION_SIZE = 9
             self._NUM_OF_ELITE_SCHEDULES = 1
             self._MUTATION_RATE = 0.1
