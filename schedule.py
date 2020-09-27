@@ -44,28 +44,56 @@ class Schedule:
         for i, aClass in enumerate(classes):
             classroom = aClass.get_room()
             course = aClass.get_course()
+            section_overlap_counter = 0
+
             # check seating capacity
             if classroom.get_seatingCapacity() < course.get_maxNumOfStudents():
                 self._numberOfConflicts += 1
+
             # check room in requirement
-            if course.get_roomIn != "":
+            if len(course.get_roomIn()) != 0:
                 if course.get_roomIn() != classroom.get_room():
                     self._numberOfConflicts += 1
-            # check meeting pattern
+
+            # check meeting pattern (e.g., 3X50')
             if not self._meeting_pattern_matched(aClass):
                 self._numberOfConflicts += 1
-
 
             # compare with all the following classes in the classes list, ignore previously considered classes
             for j, anotherClass in enumerate(classes):
                 if j > i:
-                    if aClass.get_meetingTime() == anotherClass.get_meetingTime:
+                    # check the following conditions if two classes are on the same meeting times
+                    if aClass.get_meetingTime() == anotherClass.get_meetingTime():
+
+                        # cannot be held in the same room
                         if aClass.get_room() == anotherClass.get_room():
                             self._numberOfConflicts += 1
 
+                        # a class should not be scheduled on the same time as co-reqs
+                        if anotherClass.get_course().get_name().split('_')[0] in aClass.get_course().get_coreqs():
+                            self._numberOfConflicts += 1
 
+                        # a class should not be scheduled on the same time as potential conflicts
+                        if anotherClass.get_course().get_name().split('_')[
+                            0] in aClass.get_course().get_potentialConflicts():
+                            self._numberOfConflicts += 1
+
+                        # handle multiple section
+                        if aClass.get_course().get_num_of_sections() > 1 and self._are_both_course_sections(aClass,
+                                                                                                            anotherClass):
+                            section_overlap_counter += 1
+                            if section_overlap_counter > aClass.get_course().get_concurrency__max():
+                                self._numberOfConflicts += 1
 
         return 1 / (1.0 * self._numberOfConflicts + 1)
+
+    def _are_both_course_sections(self, aClass, bClass):
+        """checks if two classes are sections of the same course"""
+        if '_' in aClass.get_course().get_name() and '_' in bClass.get_course().get_name():
+            if aClass.get_course().get_name().split('_')[0] == bClass.get_course().get_name().split("_")[0]:
+                return True
+
+        return False
 
     def _meeting_pattern_matched(self, aClass):
         """Finds if a course matched its pattern with the assigned meeting times"""
