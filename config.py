@@ -1,4 +1,4 @@
-from data import Data
+from componentdata import Data
 
 
 class Config:

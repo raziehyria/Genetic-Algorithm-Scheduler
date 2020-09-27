@@ -1,7 +1,8 @@
 from config import Config
 from geneticalgorithm import GeneticAlgorithm
 from population import Population
-from display import DisplayMgr
+from display.display import DisplayMgr
+
 
 config = Config()
 display_manager = DisplayMgr()
