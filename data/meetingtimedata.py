@@ -9,7 +9,7 @@ class MeetingTimeData:
     """
 
     def __init__(self):
-        meetingTimeData = pandas.read_excel('data/Course list and attributes.xlsx', sheet_name='Meeting Times')
+        meetingTimeData = pandas.read_excel('Course list and attributes.xlsx', sheet_name='Meeting Times')
         json_str = meetingTimeData.to_json()
         data = json.loads(json_str)
         self.meeting_times = []
