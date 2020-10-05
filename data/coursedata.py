@@ -19,7 +19,7 @@ class CourseData():
         self._courses_names_set = set()
         self._subject_level_dict = {}
 
-        excel_data_df = pandas.read_excel('Course list and attributes.xlsx', sheet_name='S&E Courses')
+        excel_data_df = pandas.read_excel('C:/Users/david/Desktop/CMPSC-487W/CS/cs/data/Course list and attributes.xlsx', sheet_name='S&E Courses')
         json_str = excel_data_df.to_json(orient='records')  # use this to read rows not columns
         data = json.loads(json_str)
 
