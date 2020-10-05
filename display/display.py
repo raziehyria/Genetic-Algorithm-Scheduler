@@ -12,40 +12,40 @@ class DisplayMgr:
 
         courses = self.data.get_courses()
         coursesDisplayData = []
-        for i in range(0, len(courses)):
+        for course in courses:
             coursesDisplayData.append(
-                [courses[i].get_subject(), courses[i].get_number(), courses[i].get_description(),
-                 courses[i].get_meetingPattern(),
-                 courses[i].get_maxNumOfStudents(), courses[i].get_prerequisites(), courses[i].get_coreqs(),
-                 courses[i].get_potentialConflicts(),
-                 courses[i].get_mutuallyExclusives(), courses[i].get_roomIn(), courses[i].get_num_of_sections(),
-                 courses[i].get_concurrency__max()])
+                [course.get_subject(), course.get_number(), course.get_description(),
+                 course.get_meetingPattern(),
+                 course.get_maxNumOfStudents(), course.get_prerequisites(), course.get_coreqs(),
+                 course.get_potentialConflicts(),
+                 course.get_mutuallyExclusives(), course.get_roomIn(), course.get_num_of_sections(),
+                 course.get_concurrency__max()])
         return coursesDisplayData
 
     def get_classroomsDisplayData(self):
 
         classrooms = self.data.get_classrooms()
         classroomsDisplayData = []
-        for i in range(0, len(classrooms)):
-            classroomsDisplayData.append([str(classrooms[i].get_building()), str(classrooms[i].get_room()),
-                                          str(classrooms[i].get_seatingCapacity()), str(classrooms[i].get_type())])
+        for classroom in classrooms:
+            classroomsDisplayData.append([str(classroom.get_building()), str(classroom.get_room()),
+                                          str(classroom.get_seatingCapacity()), str(classroom.get_type())])
         return classroomsDisplayData
 
     def get_meetingtimesDisplayData(self):
 
         meetingTimes = self.data.get_meetingTimes()
         meetingTimesDisplayData = []
-        for i in range(0, len(meetingTimes)):
+        for meetingTime in meetingTimes:
             meetingTimesDisplayData.append(
-                [meetingTimes[i].get_days(), meetingTimes[i].get_duration(), meetingTimes[i].get_time()])
+                [meetingTime.get_days(), meetingTime.get_duration(), meetingTime.get_time()])
         return meetingTimesDisplayData
 
     def get_scheduleDisplayData(self, schedule):
         classes = schedule.get_classes()
         scheduleDisplayData = []
-        for i in range(0, len(classes)):
-            scheduleDisplayData.append([classes[i].get_id(), classes[i].get_course().get_name(), classes[i].get_room(),
-                                        classes[i].get_meetingTime()])
+        for aclass in classes:
+            scheduleDisplayData.append([aclass.get_id(), aclass.get_course().get_name(), aclass.get_room(),
+                                        aclass.get_meetingTime()])
         return scheduleDisplayData
 
     # Function for writing to excel file
@@ -60,7 +60,6 @@ class DisplayMgr:
             schedule_df.to_excel(writer, sheet_name='Schedule', index=False)
 
     def writeAllData(self, schedule):
-
         courses_df = pd.DataFrame(self.get_coursesDisplayData(),
                                   columns=["Subject", "Number", "Description", "Meeting Pattern",
                                            "Max Number Of Students",
