@@ -19,10 +19,11 @@ class Config:
         if Config.__singletonConfig is not None:
             raise Exception("This is a singleton class, cannot instantiate")
         else:
-            self._POPULATION_SIZE = 9
-            self._NUM_OF_ELITE_SCHEDULES = 1
+            self._POPULATION_SIZE = 23
+            self._NUM_OF_ELITE_SCHEDULES = 2
             self._MUTATION_RATE = 0.1
-            self._TOURNAMENT_SELECTION_SIZE = 3
+            self._TOURNAMENT_SELECTION_SIZE = 7
+            self._MAX_ITERATION = 2000
             self._data = Data()
             Config.__singletonConfig = self
 
@@ -37,6 +38,9 @@ class Config:
 
     def get_TOURNAMENT_SELECTION_SIZE(self):
         return self._TOURNAMENT_SELECTION_SIZE
+
+    def get_MAX_ITERATION(self):
+        return self._MAX_ITERATION
 
     def get_data(self):
         return self._data
