@@ -42,7 +42,7 @@ class GeneticAlgorithm:
             else:
                 crossoverSchedule.get_classes()[i] = schedule2.get_classes()[i]
 
-            return crossoverSchedule
+        return crossoverSchedule
 
     def _mutate_schedule(self, schedule):
         newSchedule = Schedule().initialize()

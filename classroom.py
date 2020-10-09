@@ -2,10 +2,10 @@ class Classroom:
     """Represents a Class room with building, room number, maximum capacity and class type"""
 
     def __init__(self, building, room, seating_capacity, room_type):
-        self._building = building
-        self._room = room
+        self._building = str(building).strip()
+        self._room = str(room).strip()
         self._seating_capacity = seating_capacity
-        self._room_type = room_type
+        self._room_type = str(room_type).strip()
 
     def get_building(self):
         return self._building
