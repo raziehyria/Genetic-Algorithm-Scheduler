@@ -8,8 +8,8 @@ class MeetingTimeData:
     This class handles creating objects for Meeting Times
     """
 
-    def __init__(self):
-        meetingTimeData = pandas.read_excel('C:/Users/david/Desktop/CMPSC-487W/CS/cs/data/Course list and attributes.xlsx', sheet_name='Meeting Times')
+    def __init__(self, file_path):
+        meetingTimeData = pandas.read_excel(file_path, sheet_name='Meeting Times')
         json_str = meetingTimeData.to_json()
         data = json.loads(json_str)
         self.meeting_times = []
