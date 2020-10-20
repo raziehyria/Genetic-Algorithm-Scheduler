@@ -72,12 +72,6 @@ class Schedule:
             self._fitness = self.calculate_fitness()
             self._isFitnessChanged = False
 
-    # def get_fitness(self):
-    #     if self._isFitnessChanged:
-    #         self._fitness = self.calculate_fitness()
-    #         self._isFitnessChanged = False
-    #     return self._fitness
-
     def get_fitness(self):
         return self._fitness
 
@@ -97,15 +91,6 @@ class Schedule:
             if classroom.get_seatingCapacity() < course.get_maxNumOfStudents():
                 self._numberOfMajorConflicts += 1
                 self._majorConflicts.append(Conflict(str(aClass), "Insufficient room capacity"))
-
-            # # check room in requirement
-            # if len(course.get_roomIn()) != 0:
-            #     if course.get_roomIn() != classroom.get_room():
-            #         self._numberOfConflicts += 1
-
-            # # check meeting pattern (e.g., 3X50')
-            # if not self._meeting_pattern_matched(aClass):
-            #     self._numberOfConflicts += 10
 
             # compare with all the following classes in the classes list, ignore previously considered classes
             for j, anotherClass in enumerate(classes):

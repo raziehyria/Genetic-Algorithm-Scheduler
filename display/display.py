@@ -2,8 +2,6 @@ import prettytable
 from config import Config
 import pandas as pd
 
-from schedule import Schedule
-
 
 class DisplayMgr:
 
@@ -157,9 +155,3 @@ class DisplayMgr:
         for conflict in conflicts:
             table.add_row(conflict)
         print(table)
-test=Schedule()
-test.initialize()
-test.set_fitness()
-dmgr=DisplayMgr()
-dmgr.writeSchedule(test)
-dmgr.print_conflicts(test)

@@ -1,7 +1,7 @@
 class Conflict():
     """Holds conflicts that cannot be fixed by the GA
     Allows user to easily find them and manually fix them in the schedule"""
-    def __init__(self, aClass, type, conflictClass=None, majorConflict = True):
+    def __init__(self, aClass, type, conflictClass=None, majorConflict=True):
         self.aClass = aClass
         self.conflictClass = conflictClass
         self.type = type
