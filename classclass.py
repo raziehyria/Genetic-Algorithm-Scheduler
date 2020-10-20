@@ -20,6 +20,6 @@ class Class:
     def set_room(self, room): self._room = room
 
     def __str__(self):
-        return str(self._course.get_name()) + "," + \
-               str(self._room.get_room()) + ", " + \
+        return str(self._course.get_name()) + ", " + \
+               str(self._room) + ", " + \
                str(self._meetingTime.get_meetingTime())
