@@ -29,8 +29,8 @@ class Data:
             print("File not found, please ensure the full path with the file name is correct")
         except Exception:
             print("Something went wrong!")
-        finally:
-            sys.exit()
+        # finally:      # prevented ClassScheduling.py from running
+        #     sys.exit()
 
 
 

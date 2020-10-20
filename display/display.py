@@ -48,6 +48,14 @@ class DisplayMgr:
                                         aclass.get_meetingTime()])
         return scheduleDisplayData
 
+    def get_conflictsDisplayData(self, schedule):
+        majorConflicts = schedule.get_majorConflicts()
+        minorConflicts = schedule.get_minorConflicts()
+        conflictsDisplayData = []
+        for conflict in majorConflicts + minorConflicts:
+            conflictsDisplayData.append([conflict.aClass, conflict.type, conflict.conflictClass, conflict.severity])
+        return conflictsDisplayData
+
     # Function for writing to excel file
     # Used: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_excel.html
 
@@ -56,8 +64,11 @@ class DisplayMgr:
                                    columns=[
                                        "Class id", "Course (Subject, Number, Section)", "Classroom (Building, Room)",
                                        "Meeting Time (Day(s), Time)"])
+        conflicts_df = pd.DataFrame(self.get_conflictsDisplayData(schedule),
+                                    columns=["Class", "Type", "Conflicting Class", "Severity"])
         with pd.ExcelWriter('schedule.xlsx') as writer:
             schedule_df.to_excel(writer, sheet_name='Schedule', index=False)
+            conflicts_df.to_excel(writer, sheet_name='Conflicts', index=False)
 
     def writeAllData(self, schedule):
         courses_df = pd.DataFrame(self.get_coursesDisplayData(),
@@ -77,12 +88,15 @@ class DisplayMgr:
                                    columns=[
                                        "Class id", "Course (Subject, Number, Section)", "Classroom (Building, Room)",
                                        "Meeting Time (Day(s), Time)"])
+        conflicts_df = pd.DataFrame(self.get_conflictsDisplayData(schedule),
+                                    columns=["Class", "Type", "Conflicting Class", "Severity"])
 
         with pd.ExcelWriter('output.xlsx') as writer:
             courses_df.to_excel(writer, sheet_name='Courses', index=False)
             classrooms_df.to_excel(writer, sheet_name='Classrooms', index=False)
             meetingtimes_df.to_excel(writer, sheet_name='Meetingtimes', index=False)
             schedule_df.to_excel(writer, sheet_name='Schedule', index=False)
+            conflicts_df.to_excel(writer, sheet_name='Conflicts', index=False)
 
     # Functions for displaying to the console
     def print_available_data(self, schedule):
@@ -116,8 +130,7 @@ class DisplayMgr:
             meetingTimesTable.add_row(meetingtime)
         print(meetingTimesTable)
 
-    def print_generation(self,
-                         population):  # some parts of this function could be missing, some of the code cut off in the video
+    def print_generation(self, population):
         table1 = prettytable.PrettyTable(
             ["schedule #", "fitness", "# of conflicts", "classes [dept,class,room instructor]"])
         schedules = population.get_schedules()
@@ -133,4 +146,12 @@ class DisplayMgr:
              "Meeting Time (Day(s), Time)"])
         for aclass in classes:
             table.add_row(aclass)
+        print(table)
+
+    def print_conflicts(self, schedule):
+        conflicts = self.get_conflictsDisplayData(schedule)
+        table = prettytable.PrettyTable(
+            ["Course", "Type", "Conflicting Course", "Severity"])
+        for conflict in conflicts:
+            table.add_row(conflict)
         print(table)

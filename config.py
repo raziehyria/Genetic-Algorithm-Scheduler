@@ -22,7 +22,7 @@ class Config:
             self._FILE_PATH = input("Please provide the full path to the input excel file:\n")
             self._POPULATION_SIZE = 23
             self._NUM_OF_ELITE_SCHEDULES = 2
-            self._MUTATION_RATE = 0.1
+            self._MUTATION_RATE = 0.002  #originally at 0.1
             self._TOURNAMENT_SELECTION_SIZE = 7
             self._MAX_ITERATION = 2000
             self._data = Data(self._FILE_PATH)

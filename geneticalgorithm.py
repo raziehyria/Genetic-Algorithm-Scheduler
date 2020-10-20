@@ -11,7 +11,7 @@ class GeneticAlgorithm:
 
     def evolve(self, population):
         population = self._mutate_population(self._crossover_population(population))
-        population.get_schedules().sort(key=lambda x: x.get_fitness(), reverse=True)
+        population.sort_schedules()
         return population
 
     def _crossover_population(self, pop):
@@ -57,5 +57,5 @@ class GeneticAlgorithm:
             tournament_pop.get_schedules().append(
                 pop.get_schedules()[rnd.randrange(self._config.get_POPULATION_SIZE())])
 
-        tournament_pop.get_schedules().sort(key=lambda x: x.get_fitness(), reverse=True)
+        tournament_pop.sort_schedules()
         return tournament_pop
