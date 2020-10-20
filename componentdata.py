@@ -38,8 +38,7 @@ class Data:
         except Exception:
             print("Something went wrong!")
             sys.exit()
-        # finally:
-        #     # sys.exit()
+
 
     def _populate_meetingTimes_dictionary(self):
         """Populates meeting times dictionary: 'pattern' - list of matching meeting times object"""
