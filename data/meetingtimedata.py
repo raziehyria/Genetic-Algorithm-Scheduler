@@ -43,7 +43,6 @@ class MeetingTimeData:
 
         # sometimes the hyphen is used, instead of dash
         if len(items) != 2:
-            print('No regular dash found, trying to split using hyphen dash "–"')
             items = time_slot.split('–')
         am_or_pm = ''
 
