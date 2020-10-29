@@ -79,7 +79,7 @@ class Schedule:
             # check seating capacity
             if classroom.get_seatingCapacity() < course.get_maxNumOfStudents():
                 self._numberOfMajorConflicts += 1
-                self._majorConflicts.append(Conflict(str(aClass), "Insufficient room capacity"))
+                self._majorConflicts.append(Conflict(aClass, "Insufficient room capacity"))
 
             # compare with all the following classes in the classes list, ignore previously considered classes
             for j, anotherClass in enumerate(classes):
@@ -90,18 +90,18 @@ class Schedule:
                         # cannot be held in the same room
                         if aClass.get_room() == anotherClass.get_room():
                             self._numberOfMajorConflicts += 1
-                            self._majorConflicts.append(Conflict(str(aClass), "Scheduled on same room", str(anotherClass)))
+                            self._majorConflicts.append(Conflict(aClass, "Scheduled on same room", str(anotherClass)))
 
                         # a class should not be scheduled on the same time as co-reqs
                         if anotherClass.get_course().get_name().split('_')[0] in aClass.get_course().get_coreqs():
                             self._numberOfMinorConflicts += 1
-                            self._minorConflicts.append(Conflict(str(aClass), "Concurrent with Co-req", str(anotherClass), False))
+                            self._minorConflicts.append(Conflict(aClass, "Concurrent with Co-req", str(anotherClass), False))
 
                         # a class should not be scheduled on the same time as potential conflicts
                         if anotherClass.get_course().get_name().split('_')[
                             0] in aClass.get_course().get_potentialConflicts():
                             self._numberOfMinorConflicts += 1
-                            self._minorConflicts.append(Conflict(str(aClass), "Concurrent with potential conflict", str(anotherClass), False))
+                            self._minorConflicts.append(Conflict(aClass, "Concurrent with potential conflict", str(anotherClass), False))
 
 
                         # handle multiple section
@@ -111,7 +111,7 @@ class Schedule:
                             if section_overlap_counter > aClass.get_course().get_concurrency__max():
                                 self._numberOfMinorConflicts += 1
                                 self._minorConflicts.append(
-                                    Conflict(str(aClass), "Concurrent with too many sections", str(anotherClass), False))
+                                    Conflict(aClass, "Concurrent with too many sections", str(anotherClass), False))
 
         return 1 / (1.0 * self._numberOfMajorConflicts + 1)
 
