@@ -1,9 +1,12 @@
+from datetime import datetime
+
 from config import Config
 from display.display import DisplayMgr
 from geneticalgorithm import GeneticAlgorithm
 from population import Population
 
 #  added the try-catch block because I was getting exception error from the Config class
+start_time = datetime.now()
 try:
     config = Config()
 except Exception:
@@ -32,9 +35,14 @@ while no_change_count < config.get_MAX_ITERATION():
     else:
         no_change_count = 0
         prev_fitness = best_schedule_fitness
-    print("Generation #: {} - #MajorConflict: {} - #MinorConflict: {} - Fitness: {} - No Change Count {}".format(generationCount,
-                                                                                       best_schedule.get_numberofMajorConflicts(),
-                                                                                       best_schedule.get_numberofMinorConflicts(),
-                                                                                       best_schedule_fitness,
-                                                                                       no_change_count))
+    print(
+        "Generation #: {} - # MajorConflict: {} - # MinorConflict: {} - Fitness: {} - No Change Count {} - Timestamp: {}".format(
+            generationCount,
+            best_schedule.get_numberofMajorConflicts(),
+            best_schedule.get_numberofMinorConflicts(),
+            best_schedule_fitness,
+            no_change_count, datetime.now()))
 display_manager.writeSchedule(best_schedule)
+end_time = datetime.now()
+
+print('Total time = {}'.format(end_time - start_time))

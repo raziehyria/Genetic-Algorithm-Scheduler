@@ -1,8 +1,9 @@
+import random as rnd
+import sys
+
 from data.classroomdata import ClassroomData
 from data.coursedata import CourseData
 from data.meetingtimedata import MeetingTimeData
-import sys
-import random as rnd
 
 
 class Data:
@@ -35,8 +36,9 @@ class Data:
         except FileNotFoundError:
             print("File not found, please ensure the full path with the file name is correct")
             sys.exit()
-        except Exception:
-            print("Something went wrong!")
+        except Exception as e:
+            print("Something went wrong! Please check...")
+            print(e)
             sys.exit()
 
 
