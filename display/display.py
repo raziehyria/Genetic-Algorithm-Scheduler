@@ -43,9 +43,10 @@ class DisplayMgr:
     def get_scheduleDisplayData(self, schedule):
         classes = schedule.get_classes()
         scheduleDisplayData = []
-        for aclass in classes:
-            scheduleDisplayData.append([aclass.get_id(), aclass.get_course().get_name(), aclass.get_room(),
-                                        aclass.get_meetingTime()])
+        for aClass in classes:
+            scheduleDisplayData.append([aClass.get_id(), aClass.get_course().get_name(), aClass.get_room(),
+                                        aClass.get_meetingTime().get_days(), aClass.get_meetingTime().get_time(),
+                                        aClass.get_meetingTime().get_duration()])
         return scheduleDisplayData
 
     def get_conflictsDisplayData(self, schedule):
@@ -53,7 +54,11 @@ class DisplayMgr:
         minorConflicts = schedule.get_minorConflicts()
         conflictsDisplayData = []
         for conflict in majorConflicts + minorConflicts:
-            conflictsDisplayData.append([conflict.aClass, conflict.type, conflict.conflictClass, conflict.severity])
+            conflictsDisplayData.append(
+                [conflict.aClass.get_id(), conflict.aClass.get_course().get_name(), conflict.aClass.get_room(),
+                 conflict.aClass.get_meetingTime().get_days(), conflict.aClass.get_meetingTime().get_time(),
+                 conflict.aClass.get_meetingTime().get_duration(), conflict.type, conflict.conflictClass,
+                 conflict.severity])
         return conflictsDisplayData
 
     # Function for writing to excel file
@@ -63,9 +68,11 @@ class DisplayMgr:
         schedule_df = pd.DataFrame(self.get_scheduleDisplayData(schedule),
                                    columns=[
                                        "Class id", "Course (Subject, Number, Section)", "Classroom (Building, Room)",
-                                       "Meeting Time (Day(s), Time)"])
+                                       "Day(s)", "Time", "Duration"])
         conflicts_df = pd.DataFrame(self.get_conflictsDisplayData(schedule),
-                                    columns=["Class", "Type", "Conflicting Class", "Severity"])
+                                    columns=["Class id", "Course (Subject, Number, Section)",
+                                             "Classroom (Building, Room)",
+                                             "Day(s)", "Time", "Duration", "Type", "Conflicting Class", "Severity"])
         with pd.ExcelWriter('schedule.xlsx') as writer:
             schedule_df.to_excel(writer, sheet_name='Schedule', index=False)
             conflicts_df.to_excel(writer, sheet_name='Conflicts', index=False)
@@ -87,9 +94,11 @@ class DisplayMgr:
         schedule_df = pd.DataFrame(self.get_scheduleDisplayData(schedule),
                                    columns=[
                                        "Class id", "Course (Subject, Number, Section)", "Classroom (Building, Room)",
-                                       "Meeting Time (Day(s), Time)"])
+                                       "Day(s)", "Time", "Duration"])
         conflicts_df = pd.DataFrame(self.get_conflictsDisplayData(schedule),
-                                    columns=["Class", "Type", "Conflicting Class", "Severity"])
+                                    columns=["Class id", "Course (Subject, Number, Section)",
+                                             "Classroom (Building, Room)",
+                                             "Day(s)", "Time", "Duration", "Type", "Conflicting Class", "Severity"])
 
         with pd.ExcelWriter('output.xlsx') as writer:
             courses_df.to_excel(writer, sheet_name='Courses', index=False)
@@ -130,20 +139,11 @@ class DisplayMgr:
             meetingTimesTable.add_row(meetingtime)
         print(meetingTimesTable)
 
-    def print_generation(self, population):
-        table1 = prettytable.PrettyTable(
-            ["schedule #", "fitness", "# of conflicts", "classes [dept,class,room instructor]"])
-        schedules = population.get_schedules()
-        for i in range(0, len(schedules)):
-            table1.add_row(
-                [str(i), round(schedules[i].get_fitness(), 3), schedules[i].get_numberofConflicts(), schedules[i]])
-        print(table1)
-
     def print_schedule(self, schedule):
         classes = self.get_scheduleDisplayData(schedule)
         table = prettytable.PrettyTable(
             ["Class id", "Course (Subject, Number, Section)", "Classroom (Building, Room)",
-             "Meeting Time (Day(s), Time)"])
+             "Day(s)", "Time", "Duration"])
         for aclass in classes:
             table.add_row(aclass)
         print(table)
@@ -151,7 +151,9 @@ class DisplayMgr:
     def print_conflicts(self, schedule):
         conflicts = self.get_conflictsDisplayData(schedule)
         table = prettytable.PrettyTable(
-            ["Course", "Type", "Conflicting Course", "Severity"])
+            ["Class id", "Course (Subject, Number, Section)", "Classroom (Building, Room)",
+             "Day(s)", "Time", "Duration", "Type", "Conflicting Course", "Severity"])
         for conflict in conflicts:
             table.add_row(conflict)
         print(table)
+
