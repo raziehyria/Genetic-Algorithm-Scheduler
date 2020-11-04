@@ -8,6 +8,21 @@ class DisplayMgr:
     def __init__(self):
         self.data = Config.getInstance().get_data()
 
+        self.course_columns = ["Subject", "Number", "Description", "Meeting Pattern", "Max Number Of Students",
+                               "Prerequisites", "Corequisites", "Potential Conflicts", "Mutually Exclusives", "Room In",
+                               "# of sections", "# of concurrent sections"]
+
+        self.classroom_columns = ["Building", "Room", "Seating Capacity", "Room Type"]
+
+        self.meeting_times_columns = ["Days", "Duration", "Time"]
+
+        self.conflicts_columns = ["Class id", "Course (Subject, Number, Section)",
+                                  "Building", "Room",
+                                  "Day(s)", "Time", "Duration", "Type", "Conflicting Class", "Severity"]
+
+        self.schedule_columns = ["Class id", "Course (Subject, Number, Section)", "Building", "Room",
+                                 "Day(s)", "Time", "Duration"]
+
     def get_coursesDisplayData(self):
 
         courses = self.data.get_courses()
@@ -44,9 +59,11 @@ class DisplayMgr:
         classes = schedule.get_classes()
         scheduleDisplayData = []
         for aClass in classes:
-            scheduleDisplayData.append([aClass.get_id(), aClass.get_course().get_name(), aClass.get_room(),
-                                        aClass.get_meetingTime().get_days(), aClass.get_meetingTime().get_time(),
-                                        aClass.get_meetingTime().get_duration()])
+            scheduleDisplayData.append(
+                [aClass.get_id(), aClass.get_course().get_name(), aClass.get_room().get_building(),
+                 aClass.get_room().get_room(),
+                 aClass.get_meetingTime().get_days(), aClass.get_meetingTime().get_time(),
+                 aClass.get_meetingTime().get_duration()])
         return scheduleDisplayData
 
     def get_conflictsDisplayData(self, schedule):
@@ -55,7 +72,9 @@ class DisplayMgr:
         conflictsDisplayData = []
         for conflict in majorConflicts + minorConflicts:
             conflictsDisplayData.append(
-                [conflict.aClass.get_id(), conflict.aClass.get_course().get_name(), conflict.aClass.get_room(),
+                [conflict.aClass.get_id(), conflict.aClass.get_course().get_name(),
+                 conflict.aClass.get_room().get_building(),
+                 conflict.aClass.get_room().get_room(),
                  conflict.aClass.get_meetingTime().get_days(), conflict.aClass.get_meetingTime().get_time(),
                  conflict.aClass.get_meetingTime().get_duration(), conflict.type, conflict.conflictClass,
                  conflict.severity])
@@ -66,39 +85,27 @@ class DisplayMgr:
 
     def writeSchedule(self, schedule):
         schedule_df = pd.DataFrame(self.get_scheduleDisplayData(schedule),
-                                   columns=[
-                                       "Class id", "Course (Subject, Number, Section)", "Classroom (Building, Room)",
-                                       "Day(s)", "Time", "Duration"])
+                                   columns=self.schedule_columns)
         conflicts_df = pd.DataFrame(self.get_conflictsDisplayData(schedule),
-                                    columns=["Class id", "Course (Subject, Number, Section)",
-                                             "Classroom (Building, Room)",
-                                             "Day(s)", "Time", "Duration", "Type", "Conflicting Class", "Severity"])
+                                    columns=self.conflicts_columns)
         with pd.ExcelWriter('schedule.xlsx') as writer:
             schedule_df.to_excel(writer, sheet_name='Schedule', index=False)
             conflicts_df.to_excel(writer, sheet_name='Conflicts', index=False)
 
     def writeAllData(self, schedule):
         courses_df = pd.DataFrame(self.get_coursesDisplayData(),
-                                  columns=["Subject", "Number", "Description", "Meeting Pattern",
-                                           "Max Number Of Students",
-                                           "Prerequisites", "Corequisites", "Potential Conflicts",
-                                           "Mutually Exclusives", "Room In"
-                                      , "# of sections", "# of concurrent sections"])
+                                  columns=self.course_columns)
 
         classrooms_df = pd.DataFrame(self.get_classroomsDisplayData(),
-                                     columns=["Building", "Room", "Seating Capacity", "Room Type"])
+                                     columns=self.classroom_columns)
 
         meetingtimes_df = pd.DataFrame(self.get_meetingtimesDisplayData(),
-                                       columns=["Days", "Duration", "Time"])
+                                       columns=self.meeting_times_columns)
 
         schedule_df = pd.DataFrame(self.get_scheduleDisplayData(schedule),
-                                   columns=[
-                                       "Class id", "Course (Subject, Number, Section)", "Classroom (Building, Room)",
-                                       "Day(s)", "Time", "Duration"])
+                                   columns=self.schedule_columns)
         conflicts_df = pd.DataFrame(self.get_conflictsDisplayData(schedule),
-                                    columns=["Class id", "Course (Subject, Number, Section)",
-                                             "Classroom (Building, Room)",
-                                             "Day(s)", "Time", "Duration", "Type", "Conflicting Class", "Severity"])
+                                    columns=self.conflicts_columns)
 
         with pd.ExcelWriter('output.xlsx') as writer:
             courses_df.to_excel(writer, sheet_name='Courses', index=False)
@@ -116,24 +123,21 @@ class DisplayMgr:
         self.print_schedule(schedule)
 
     def print_courses(self):
-        coursesTable = prettytable.PrettyTable(
-            ["subject", "number", "description", "meetingPattern", "maxNumOfStudents",
-             "preReqs", "coReqs", "potentialConflicts", "mutuallyExclusives", "roomIn"
-                , "# of sections", "# of concurrent sections"])
+        coursesTable = prettytable.PrettyTable(self.course_columns)
         courses = self.get_coursesDisplayData()
         for course in courses:
             coursesTable.add_row(course)
         print(coursesTable)
 
     def print_classrooms(self):
-        classroomsTable = prettytable.PrettyTable(["building", "room", "seatingCapacity", "roomType"])
+        classroomsTable = prettytable.PrettyTable(self.classroom_columns)
         classrooms = self.get_classroomsDisplayData()
         for classroom in classrooms:
             classroomsTable.add_row(classroom)
         print(classroomsTable)
 
     def print_meeting_times(self):
-        meetingTimesTable = prettytable.PrettyTable(["days", "duration", "time"])
+        meetingTimesTable = prettytable.PrettyTable(self.meeting_times_columns)
         meetingTimes = self.get_meetingtimesDisplayData()
         for meetingtime in meetingTimes:
             meetingTimesTable.add_row(meetingtime)
@@ -141,18 +145,14 @@ class DisplayMgr:
 
     def print_schedule(self, schedule):
         classes = self.get_scheduleDisplayData(schedule)
-        table = prettytable.PrettyTable(
-            ["Class id", "Course (Subject, Number, Section)", "Classroom (Building, Room)",
-             "Day(s)", "Time", "Duration"])
+        table = prettytable.PrettyTable(self.schedule_columns)
         for aclass in classes:
             table.add_row(aclass)
         print(table)
 
     def print_conflicts(self, schedule):
         conflicts = self.get_conflictsDisplayData(schedule)
-        table = prettytable.PrettyTable(
-            ["Class id", "Course (Subject, Number, Section)", "Classroom (Building, Room)",
-             "Day(s)", "Time", "Duration", "Type", "Conflicting Course", "Severity"])
+        table = prettytable.PrettyTable(self.conflicts_columns)
         for conflict in conflicts:
             table.add_row(conflict)
         print(table)
