@@ -20,6 +20,9 @@ class Schedule:
 
     def initialize(self):
         courses = self._data.get_courses()
+
+        # need to keep track of faculties with no restriction
+        faculty_with_no_restrictions_dict = {}
         for course in courses:
             new_class = Class(self._classNum, course)
             self._classNum += 1
@@ -36,6 +39,15 @@ class Schedule:
             else:
                 print("Classroom not found.. please check")
                 print("Course = " + course.get_name())
+
+            # random faculty will be picked based off random meeting time as well to minimize conflicts
+            random_faculty, faculty_with_no_restrictions_dict = self._data.get_faculties(course=course, meeting_time=random_meeting_time,
+                                                                                         faculty_with_no_restrictions_dict=faculty_with_no_restrictions_dict,
+                                                                                         random=True)
+            new_class.set_faculty(random_faculty)
+            # else:
+            #     print("Faculty not found.. please check")
+            #     print("Course = " + course.get_name())
 
             self._classes.append(new_class)
         return self
@@ -70,11 +82,40 @@ class Schedule:
         self._numberOfMajorConflicts = 0
         self._numberOfMinorConflicts = 0
         classes = self.get_classes()
+        faculty_contact_hours_dict = {}  # will track each faculty contact hours as we traverse through schedule
 
         for i, aClass in enumerate(classes):
             classroom = aClass.get_room()
             course = aClass.get_course()
             section_overlap_counter = 0
+
+            # check and increment contact hours
+            faculty = aClass.get_faculty()
+            if faculty != "Staff":
+                faculty_contact_hours = faculty.get_contact_hours()
+                course_contact_hours = aClass.get_course().get_numContactHrs()
+                if faculty not in faculty_contact_hours_dict:
+                    faculty_contact_hours_dict[faculty] = 0
+                faculty_contact_hours_dict[faculty] += course_contact_hours
+                if faculty_contact_hours_dict[faculty] > faculty_contact_hours:
+                    self._numberOfMajorConflicts += 1
+                    self._majorConflicts.append(Conflict(aClass, "Faculty exceeds contact hours, current: {}, required: {}".format(
+                        faculty_contact_hours_dict[faculty], faculty_contact_hours)))
+
+                # Check availability conflict
+                faculty_availability = faculty.get_availability()
+                if "NO" not in faculty_availability.upper():
+                    days_check = False
+                    meeting_time_check = False
+                    if self._data.check_matching_days(faculty_availability.split(":", 1)[0], aClass.get_meetingTime().get_days()):
+                        days_check = True
+                        if days_check:
+                            if self._data.check_meeting_time_overlap(faculty_availability.split(":", 1)[1], aClass.get_meetingTime().get_time()):
+                                meeting_time_check = True
+                    if not days_check or not meeting_time_check:
+                        self._numberOfMinorConflicts += 1
+                        self._minorConflicts.append(Conflict(aClass, "Does not fit in faculty's available time, {}".format(faculty_availability), False))
+
 
             # check seating capacity
             if classroom.get_seatingCapacity() < course.get_maxNumOfStudents():
@@ -86,6 +127,12 @@ class Schedule:
                 if j > i:
                     # check the following conditions if two classes are on the same meeting times
                     if aClass.get_meetingTime() == anotherClass.get_meetingTime():
+
+                        # cannot be taught by same faculty
+                        if faculty != "Staff":
+                            if faculty == anotherClass.get_faculty():
+                                self._numberOfMajorConflicts +=1
+                                self._majorConflicts.append(Conflict(aClass, "Cannot teach two classes at same time", str(anotherClass)))
 
                         # cannot be held in the same room
                         if aClass.get_room() == anotherClass.get_room():
@@ -103,7 +150,6 @@ class Schedule:
                             self._numberOfMinorConflicts += 1
                             self._minorConflicts.append(Conflict(aClass, "Concurrent with potential conflict", str(anotherClass), False))
 
-
                         # handle multiple section
                         if aClass.get_course().get_num_of_sections() > 1 and self._are_both_course_sections(aClass,
                                                                                                             anotherClass):
@@ -120,7 +166,6 @@ class Schedule:
         if '_' in aClass.get_course().get_name() and '_' in bClass.get_course().get_name():
             if aClass.get_course().get_name().split('_')[0] == bClass.get_course().get_name().split("_")[0]:
                 return True
-
         return False
 
     def __str__(self):

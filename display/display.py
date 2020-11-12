@@ -16,12 +16,10 @@ class DisplayMgr:
 
         self.meeting_times_columns = ["Days", "Duration", "Time"]
 
-        self.conflicts_columns = ["Class id", "Course (Subject, Number, Section)",
-                                  "Building", "Room",
-                                  "Day(s)", "Time", "Duration", "Type", "Conflicting Class", "Severity"]
-
-        self.schedule_columns = ["Class id", "Course (Subject, Number, Section)", "Building", "Room",
+        self.schedule_columns = ["Class id", "Course (Subject, Number, Section)", "Faculty", "Building", "Room",
                                  "Day(s)", "Time", "Duration"]
+
+        self.conflicts_columns = self.schedule_columns + ["Type", "Conflicting Class", "Severity"]
 
     def get_coursesDisplayData(self):
 
@@ -60,7 +58,7 @@ class DisplayMgr:
         scheduleDisplayData = []
         for aClass in classes:
             scheduleDisplayData.append(
-                [aClass.get_id(), aClass.get_course().get_name(), aClass.get_room().get_building(),
+                [aClass.get_id(), aClass.get_course().get_name(), aClass.get_faculty(), aClass.get_room().get_building(),
                  aClass.get_room().get_room(),
                  aClass.get_meetingTime().get_days(), aClass.get_meetingTime().get_time(),
                  aClass.get_meetingTime().get_duration()])
@@ -73,7 +71,7 @@ class DisplayMgr:
         for conflict in majorConflicts + minorConflicts:
             conflictsDisplayData.append(
                 [conflict.aClass.get_id(), conflict.aClass.get_course().get_name(),
-                 conflict.aClass.get_room().get_building(),
+                 conflict.aClass.get_faculty(), conflict.aClass.get_room().get_building(),
                  conflict.aClass.get_room().get_room(),
                  conflict.aClass.get_meetingTime().get_days(), conflict.aClass.get_meetingTime().get_time(),
                  conflict.aClass.get_meetingTime().get_duration(), conflict.type, conflict.conflictClass,

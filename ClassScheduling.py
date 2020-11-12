@@ -6,6 +6,8 @@ from geneticalgorithm import GeneticAlgorithm
 from population import Population
 
 #  added the try-catch block because I was getting exception error from the Config class
+from schedule import Schedule
+
 start_time = datetime.now()
 try:
     config = Config()
