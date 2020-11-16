@@ -110,7 +110,7 @@ class Schedule:
                 if not self._is_faculty_available_for_the_class(faculty, aClass):
                     self._numberOfMinorConflicts += 1
                     self._minorConflicts.append(Conflict(aClass, "Does not fit in faculty's available time, {}".format(
-                        faculty.get_availability()), False))
+                        faculty.get_availability()), majorConflict=False))
 
             # check seating capacity
             if classroom.get_seatingCapacity() < course.get_maxNumOfStudents():
