@@ -1,6 +1,7 @@
-import prettytable
-from config import Config
 import pandas as pd
+import prettytable
+
+from config import Config
 
 
 class DisplayMgr:
@@ -16,12 +17,10 @@ class DisplayMgr:
 
         self.meeting_times_columns = ["Days", "Duration", "Time"]
 
-        self.conflicts_columns = ["Class id", "Course (Subject, Number, Section)",
-                                  "Building", "Room",
-                                  "Day(s)", "Time", "Duration", "Type", "Conflicting Class", "Severity"]
-
-        self.schedule_columns = ["Class id", "Course (Subject, Number, Section)", "Building", "Room",
+        self.schedule_columns = ["Class id", "Course (Subject, Number, Section)", "Faculty", "Building", "Room",
                                  "Day(s)", "Time", "Duration"]
+
+        self.conflicts_columns = self.schedule_columns + ["Type", "Conflicting Class", "Severity"]
 
     def get_coursesDisplayData(self):
 
@@ -60,7 +59,7 @@ class DisplayMgr:
         scheduleDisplayData = []
         for aClass in classes:
             scheduleDisplayData.append(
-                [aClass.get_id(), aClass.get_course().get_name(), aClass.get_room().get_building(),
+                [aClass.get_id(), aClass.get_course().get_name(), aClass.get_faculty(), aClass.get_room().get_building(),
                  aClass.get_room().get_room(),
                  aClass.get_meetingTime().get_days(), aClass.get_meetingTime().get_time(),
                  aClass.get_meetingTime().get_duration()])
@@ -73,7 +72,7 @@ class DisplayMgr:
         for conflict in majorConflicts + minorConflicts:
             conflictsDisplayData.append(
                 [conflict.aClass.get_id(), conflict.aClass.get_course().get_name(),
-                 conflict.aClass.get_room().get_building(),
+                 conflict.aClass.get_faculty(), conflict.aClass.get_room().get_building(),
                  conflict.aClass.get_room().get_room(),
                  conflict.aClass.get_meetingTime().get_days(), conflict.aClass.get_meetingTime().get_time(),
                  conflict.aClass.get_meetingTime().get_duration(), conflict.type, conflict.conflictClass,
@@ -84,28 +83,20 @@ class DisplayMgr:
     # Used: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_excel.html
 
     def writeSchedule(self, schedule):
-        schedule_df = pd.DataFrame(self.get_scheduleDisplayData(schedule),
-                                   columns=self.schedule_columns)
-        conflicts_df = pd.DataFrame(self.get_conflictsDisplayData(schedule),
-                                    columns=self.conflicts_columns)
+        schedule_df = pd.DataFrame(self.get_scheduleDisplayData(schedule), columns=self.schedule_columns)
+        conflicts_df = pd.DataFrame(self.get_conflictsDisplayData(schedule), columns=self.conflicts_columns)
+
         with pd.ExcelWriter('schedule.xlsx') as writer:
             schedule_df.to_excel(writer, sheet_name='Schedule', index=False)
             conflicts_df.to_excel(writer, sheet_name='Conflicts', index=False)
 
     def writeAllData(self, schedule):
-        courses_df = pd.DataFrame(self.get_coursesDisplayData(),
-                                  columns=self.course_columns)
+        courses_df = pd.DataFrame(self.get_coursesDisplayData(), columns=self.course_columns)
+        classrooms_df = pd.DataFrame(self.get_classroomsDisplayData(), columns=self.classroom_columns)
+        meetingtimes_df = pd.DataFrame(self.get_meetingtimesDisplayData(), columns=self.meeting_times_columns)
 
-        classrooms_df = pd.DataFrame(self.get_classroomsDisplayData(),
-                                     columns=self.classroom_columns)
-
-        meetingtimes_df = pd.DataFrame(self.get_meetingtimesDisplayData(),
-                                       columns=self.meeting_times_columns)
-
-        schedule_df = pd.DataFrame(self.get_scheduleDisplayData(schedule),
-                                   columns=self.schedule_columns)
-        conflicts_df = pd.DataFrame(self.get_conflictsDisplayData(schedule),
-                                    columns=self.conflicts_columns)
+        schedule_df = pd.DataFrame(self.get_scheduleDisplayData(schedule), columns=self.schedule_columns)
+        conflicts_df = pd.DataFrame(self.get_conflictsDisplayData(schedule), columns=self.conflicts_columns)
 
         with pd.ExcelWriter('output.xlsx') as writer:
             courses_df.to_excel(writer, sheet_name='Courses', index=False)

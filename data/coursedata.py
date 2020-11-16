@@ -19,7 +19,7 @@ class CourseData():
         self._courses_names_set = set()
         self._subject_level_dict = {}
 
-        excel_data_df = pandas.read_excel(file_path, sheet_name='S&E Courses')
+        excel_data_df = pandas.read_excel(file_path, sheet_name='Courses')
         json_str = excel_data_df.to_json(orient='records')  # use this to read rows not columns
         data = json.loads(json_str)
 
@@ -31,6 +31,7 @@ class CourseData():
             subject = course_row.get('Subject').strip()
             num = str(course_row.get('Num')).strip()
             description = course_row.get('Descr')
+            numContactHrs = course_row.get('# of Contact hours')
             meeting_pattern = course_row.get('Meeting pattern')
             capacity = course_row.get('Enr Cpcty')
             mutex = self._resolve_course_list(course_row.get('Mutually exclusive with'))
@@ -52,13 +53,14 @@ class CourseData():
             if int(num_of_sections) > 1:
                 for section_no in range(1, int(num_of_sections) + 1):
                     prefix = '_00' if section_no < 10 else '_0'
-                    self._courses_objects_list.append(Course(subject, num + prefix + str(section_no), description,
+                    self._courses_objects_list.append(Course(subject, num + prefix + str(section_no),
+                                                             description, numContactHrs,
                                                              meeting_pattern, capacity, pre_reqs, co_reqs,
                                                              potential_conflicts, mutex, room_in,
                                                              num_of_sections, concurrency_max))
 
             else:
-                self._courses_objects_list.append(Course(subject, num, description, meeting_pattern, capacity, pre_reqs, co_reqs,
+                self._courses_objects_list.append(Course(subject, num, description, numContactHrs, meeting_pattern, capacity, pre_reqs, co_reqs,
                                                      potential_conflicts, mutex, room_in, num_of_sections, concurrency_max))
 
     def _resolve_course_list(self, input_str):

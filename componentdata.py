@@ -1,5 +1,6 @@
 import random as rnd
 import sys
+from datetime import datetime
 
 from data.classroomdata import ClassroomData
 from data.coursedata import CourseData
@@ -22,7 +23,6 @@ class Data:
         self._meetingTimesPattern_days_dict = {}
         self._classroomType_rooms_dict = {}
         self._courses_faculties_dict = {}
-
 
         try:
             courses_data = CourseData(file_path)
@@ -82,6 +82,8 @@ class Data:
         # course names can have sections, e.g., MATH140_001, MATH140_002, we need to consider just MATH140 prefix
         unique_courses = set([course.get_name().split('_')[0] for course in self._courses])
         for faculty in self._faculties:
+            if faculty.get_name() is 'Staff':
+                continue
             for course in faculty.get_courses():
                 course = course.upper()
                 #  faculty can have MATH1XX as his courses, get all courses that have MATH1 as prefix
@@ -121,3 +123,96 @@ class Data:
                 output += self._meetingTimesPattern_days_dict.get(p)
 
         return output[rnd.randrange(len(output))] if random else output
+
+    def get_faculties(self, target_class=None, random=False):
+        output = self._faculties
+        if target_class:
+            course = target_class.get_course()
+            course_name = course.get_name().split('_')[0]  # using just the course name without section number for input
+            if (self._courses_faculties_dict.get(course_name)) is None:  # no faculty listed for that class
+                return self._faculties[-1]  # get the 'Staff' faculty
+            else:
+                faculties_for_the_course = self._courses_faculties_dict.get(course_name)
+                candidate_faculty = faculties_for_the_course[rnd.randrange(len(faculties_for_the_course))]
+
+                # TODO: Remove this code later on, after Zaf confirms
+                # faculties_available_for_the_course = self._filter_based_on_availability(target_class, faculties_for_the_course)
+                #
+                # if len(faculties_available_for_the_course) == 0:
+                #     candidate_faculty = faculties_for_the_course[rnd.randrange(len(faculties_for_the_course))]
+                # else:
+                #     candidate_faculty = faculties_available_for_the_course[rnd.randrange(len(faculties_available_for_the_course))]
+
+        return candidate_faculty if random else output
+
+    def _filter_based_on_availability(self, target_class, faculty_members):
+        output = []
+        for faculty in faculty_members:
+            faculty_availability = faculty.get_availability().upper()
+            if 'NO' in faculty_availability:
+                output.append(faculty)
+            else:
+                faculty_available_days = faculty_availability.split(":", 1)[0]
+                faculty_available_times = faculty_availability.split(":", 1)[1]
+
+                course_days = target_class.get_meetingTime().get_days()
+                course_times = target_class.get_meetingTime().get_time()
+
+                # if faculty is available only if both days and meeting times match class days and times
+                if self.check_days_overlap(faculty_available_days, course_days) \
+                        and self.check_meeting_time_overlap(faculty_available_times, course_times):
+                    output.append(faculty)
+
+        return output
+
+    def check_days_overlap(self, available_days, required_days):
+        is_overlapping = False
+        available_days = available_days.upper()
+        required_days = required_days.upper()
+        # available_days = 'MWF or TR', 'MWF'
+        if "OR" in available_days:  # e.g., 'MWF or TR'
+            multiple_days_slots = [day.strip() for day in available_days.split("OR")]
+            for each_days_slot in multiple_days_slots:
+                if required_days in each_days_slot:
+                    is_overlapping = True
+                    break
+        elif required_days in available_days:
+            is_overlapping = True
+
+        return is_overlapping
+
+    def check_meeting_time_overlap(self, available_time, required_time):
+        # available_time looks like: "10am - 5pm" or "9:30am - 4:30pm"
+        # now becomes "10am" and "5pm", "9:30am" and "4:30pm"
+        available_start_time, available_end_time = available_time.split("-")[0].strip(), available_time.split("-")[
+            1].strip()
+        # ex: 8:00 a and 8:50 a
+        required_start_time, required_end_time = required_time.split("-")[0].strip(), required_time.split("-")[
+            1].strip()
+        # turning them to datetime object for easy comparisons
+
+        available_start = self.get_datetime_object(available_start_time)
+        available_end = self.get_datetime_object(available_end_time)
+        required_start = self.get_datetime_object(required_start_time)
+        required_end = self.get_datetime_object(required_end_time)
+
+        if available_start <= required_start <= required_end <= available_end:
+            return True
+        else:
+            return False
+
+    def get_datetime_object(self, time_string):
+        """checks type of input and returns a datetime object for time comparisons"""
+        # ref https://docs.python.org/3/library/datetime.html#strftime-strptime-behavior
+        time_string = time_string.lower()
+        # add 'm' for am and pm if missing
+        if 'm' not in time_string:
+            time_string.replace('a', 'am')
+            time_string.replace('p', 'pm')
+
+        # replace space with empty string
+        time_string = time_string.replace(' ', "")
+        if ':' in time_string:
+            return datetime.strptime(time_string, "%I:%M%p")
+        else:
+            return datetime.strptime(time_string, "%I%p")

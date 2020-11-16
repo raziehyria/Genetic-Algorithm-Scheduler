@@ -1,11 +1,12 @@
 class Course:
     """"""
 
-    def __init__(self, subject, number, description, meetingPattern, maxNumOfStudents,
+    def __init__(self, subject, number, description, numContactHrs, meetingPattern, maxNumOfStudents,
                  preReqs, coReqs, potentialConflicts, mutuallyExclusives, roomIn, sections, concurrent_max):
         self._subject = subject
         self._number = number
         self._descr = description
+        self._numContactHrs = numContactHrs
         self._meetingPattern = meetingPattern
         self._maxNumOfStudents = int(maxNumOfStudents)
         self._preReqs = preReqs
@@ -17,7 +18,6 @@ class Course:
         self._concurrent_max = concurrent_max
 
         self._name = subject + str(number)
-
 
     def get_subject(self): return self._subject
 
@@ -41,6 +41,10 @@ class Course:
 
     def get_name(self): return self._name
 
+    def get_numContactHrs(self): return self._numContactHrs
+
+    def set_numContactHrs(self, numContactHrs): self._numContactHrs = numContactHrs
+
     def set_coreqs(self, coreqs): self._coReqs = coreqs
 
     def set_prerequisites(self, prereqs): self._preReqs = prereqs
@@ -52,8 +56,11 @@ class Course:
     def get_concurrency__max(self): return self._concurrent_max
 
     def __str__(self):
-        return ("Name: " + self.get_name() + " Subject: " + self.get_subject() + " Number: " + self.get_number() + " Description: " +
-                self.get_description() + " Meeting Pattern: " + self.get_meetingPattern() + " Capacity: " +
-                str(self.get_maxNumOfStudents()) + " Corequisites: " + str(self.get_coreqs()) + " Prerequisites: " +
-                str(self.get_prerequisites()) + " Potential Conflicts: " + str(self.get_potentialConflicts()) + " Mutually Exclusives: " +
-                str(self.get_mutuallyExclusives()) + " Room In: " + self.get_roomIn())
+        return ("Name: {}, Description: {}, Number of Contact hours: {}, Meeting Pattern: {}, "
+                "Max number of students: {}, Prerequisites: {}. Coorequisites: {}, "
+                "Potential Conflicts: {}, Mutually Exclusives: {}, Room in: {}, Sections: {},"
+                "Concurrent Max: {}".format(self._name, self._descr, self._numContactHrs,
+                                            self._meetingPattern, self._maxNumOfStudents,
+                                            self._preReqs, self._coReqs, self._potentialConflicts,
+                                            self._mutuallyExclusives, self._roomIn, self._sections,
+                                            self._concurrent_max))

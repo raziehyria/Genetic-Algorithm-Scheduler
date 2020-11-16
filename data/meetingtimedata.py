@@ -29,10 +29,9 @@ class MeetingTimeData:
 
     def _format_time_slot(self, time_slot):
         """
-        Formats the time slot into XX:XX [a|p] - XX:XX [a|p]
+        Formats the time slot into XX:XX [am|pm] - XX:XX [am|pm]
         input 8:00-8:50a, i.e, 'a' or 'p' carries over from end to start time
         output 8:00 a - 8:50 a
-        Known issue: if 11:00 - 12:15p => 11:00 p - 12: 15 p
         """
 
         times = []
@@ -51,10 +50,10 @@ class MeetingTimeData:
             item = item.strip()
             if 'a' in item:
                 t = item.split('a')[0].strip()
-                am_or_pm = 'a'
+                am_or_pm = 'am'
             elif 'p' in item:
                 t = item.split('p')[0].strip()
-                am_or_pm = 'p'
+                am_or_pm = 'pm'
             else:
                 t = item
 
@@ -63,6 +62,12 @@ class MeetingTimeData:
 
         # to check index out of bound error.
         if len(times) == 4:
+            start_time = int(times[3].split(':')[0])
+            end_time = int(times[1].split(':')[0])
+            # update the missing 'am':  11:00 - 12:15p => 11:00 am - 12:15 pm
+            if end_time < start_time < 12:
+                times[2] = 'am'
+
             output = '{} {} - {} {}'.format(times[3], times[2], times[1], times[0])
 
         return output
