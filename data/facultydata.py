@@ -25,5 +25,8 @@ class FacultyData:
                     contact_hours = int(contact_hours.split("to")[1].strip())
                 self._faculty_objects_list.append(Faculty(name, availability, courses, contact_hours))
 
+        # add faculty object for 'Staff' who'd teach courses that have no faculties
+        self._faculty_objects_list.append(Faculty('Staff', 'No Restrictions', None, None))
+
     def get_faculty(self):
         return self._faculty_objects_list

@@ -25,13 +25,7 @@ class Class:
     def set_room(self, room): self._room = room
 
     def __str__(self):
-        if self._faculty != "Staff":
-            return str(self._course.get_name()) + ", " + \
-                   str(self._faculty.get_name()) + ", " + \
-                   str(self._room) + ", " + \
-                   str(self._meetingTime.get_meetingTime())
-        else:
-            return str(self._course.get_name()) + ", " + \
-                   "Staff" + ", " + \
-                   str(self._room) + ", " + \
-                   str(self._meetingTime.get_meetingTime())
+        return str(self._course.get_name()) + ", " + \
+               str(self._faculty.get_name()) + ", " + \
+               str(self._room) + ", " + \
+               str(self._meetingTime.get_meetingTime())
