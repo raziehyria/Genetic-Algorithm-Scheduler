@@ -23,6 +23,8 @@ class Data:
         self._meetingTimesPattern_days_dict = {}
         self._classroomType_rooms_dict = {}
         self._courses_faculties_dict = {}
+        self._faculty_assigned_hours_dict = {}
+        self._faculty_availability_meetingtime_overlap_dict = {}
 
         try:
             courses_data = CourseData(file_path)
@@ -132,38 +134,58 @@ class Data:
             if (self._courses_faculties_dict.get(course_name)) is None:  # no faculty listed for that class
                 return self._faculties[-1]  # get the 'Staff' faculty
             else:
-                faculties_for_the_course = self._courses_faculties_dict.get(course_name)
-                candidate_faculty = faculties_for_the_course[rnd.randrange(len(faculties_for_the_course))]
+                eligible_faculties = self._courses_faculties_dict.get(course_name)
+                eligible_faculties = self._remove_faculties_hours_maxed_out(eligible_faculties)
+                available_faculties = self._filter_based_on_availability(target_class, eligible_faculties)
 
-                # TODO: Remove this code later on, after Zaf confirms
-                # faculties_available_for_the_course = self._filter_based_on_availability(target_class, faculties_for_the_course)
-                #
-                # if len(faculties_available_for_the_course) == 0:
-                #     candidate_faculty = faculties_for_the_course[rnd.randrange(len(faculties_for_the_course))]
-                # else:
-                #     candidate_faculty = faculties_available_for_the_course[rnd.randrange(len(faculties_available_for_the_course))]
+                if len(available_faculties) == 0:
+                    candidate_faculty = self._faculties[-1]  # get the 'Staff' faculty
+                else:
+                    candidate_faculty = available_faculties[rnd.randrange(len(available_faculties))]
 
         return candidate_faculty if random else output
 
     def _filter_based_on_availability(self, target_class, faculty_members):
-        output = []
+        available_faculties = []
         for faculty in faculty_members:
             faculty_availability = faculty.get_availability().upper()
             if 'NO' in faculty_availability:
-                output.append(faculty)
+                available_faculties.append(faculty)
             else:
-                faculty_available_days = faculty_availability.split(":", 1)[0]
-                faculty_available_times = faculty_availability.split(":", 1)[1]
-
                 course_days = target_class.get_meetingTime().get_days()
                 course_times = target_class.get_meetingTime().get_time()
+
+                # if already checked this combination, lets re-use the prior finding
+                key = "{} {} {}".format(faculty_availability, course_days, course_times).upper()
+                if key in self._faculty_availability_meetingtime_overlap_dict:
+                    if self._faculty_availability_meetingtime_overlap_dict[key]:
+                        available_faculties.append(faculty)
+
+                    continue  # to next faculty
+
+                faculty_available_days = faculty_availability.split(":", 1)[0]
+                faculty_available_times = faculty_availability.split(":", 1)[1]
 
                 # if faculty is available only if both days and meeting times match class days and times
                 if self.check_days_overlap(faculty_available_days, course_days) \
                         and self.check_meeting_time_overlap(faculty_available_times, course_times):
-                    output.append(faculty)
+                    available_faculties.append(faculty)
+                    # let's memoize seen overlap checks
+                    self._faculty_availability_meetingtime_overlap_dict[key] = True
+                else:
+                    self._faculty_availability_meetingtime_overlap_dict[key] = False
 
-        return output
+        return available_faculties
+
+    def _remove_faculties_hours_maxed_out(self, eligible_faculties):
+        updated_list = []
+        for faculty in eligible_faculties:
+            # if faculty absent (i.e., not assigned any hours yet) or assigned less than contact hours
+            if faculty not in self._faculty_assigned_hours_dict or \
+                    self._faculty_assigned_hours_dict.get(faculty) < faculty.get_contact_hours():
+                updated_list.append(faculty)
+
+        return updated_list
 
     def check_days_overlap(self, available_days, required_days):
         is_overlapping = False
@@ -216,3 +238,10 @@ class Data:
             return datetime.strptime(time_string, "%I:%M%p")
         else:
             return datetime.strptime(time_string, "%I%p")
+
+    def update_faculty_assigned_hours_dict(self, faculty, contact_hours):
+        self._faculty_assigned_hours_dict.setdefault(faculty, 0)
+        self._faculty_assigned_hours_dict[faculty] += contact_hours
+
+    def reset_faculty_assigned_hours_dict(self):
+        self._faculty_assigned_hours_dict = {}

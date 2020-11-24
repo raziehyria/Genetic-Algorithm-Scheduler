@@ -16,6 +16,9 @@ class MeetingTimeData:
         data = json.loads(json_str)
         self._meeting_times = []
 
+        # dictionary to speed up the lookup
+        self._format_time_slot_dict = {}
+
         data_keys = data.keys()
         for each_key in data_keys:
             all_the_days, duration = self._parse_days(each_key)
@@ -33,6 +36,9 @@ class MeetingTimeData:
         input 8:00-8:50a, i.e, 'a' or 'p' carries over from end to start time
         output 8:00 a - 8:50 a
         """
+        # if previously seen, return that formatted value
+        if time_slot in self._format_time_slot_dict:
+            return self._format_time_slot_dict[time_slot]
 
         times = []
         time_slot = time_slot.lower()
@@ -62,14 +68,16 @@ class MeetingTimeData:
 
         # to check index out of bound error.
         if len(times) == 4:
-            start_time = int(times[3].split(':')[0])
-            end_time = int(times[1].split(':')[0])
             # update the missing 'am':  11:00 - 12:15p => 11:00 am - 12:15 pm
-            if end_time < start_time < 12:
+            start_time = int(times[3].split(':')[0])
+            # if start time anywhere between 8 to 11 in the morning
+            if times[2] == 'pm' and start_time in range(8, 12):
                 times[2] = 'am'
 
             output = '{} {} - {} {}'.format(times[3], times[2], times[1], times[0])
 
+        # update dictionary for future use
+        self._format_time_slot_dict[time_slot] = output
         return output
 
     def _parse_days(self, days_duration_string):
