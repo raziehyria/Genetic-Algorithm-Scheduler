@@ -1,6 +1,7 @@
 import pandas as pd
 import prettytable
 
+from classclass import Class
 from config import Config
 
 
@@ -70,40 +71,57 @@ class DisplayMgr:
         minorConflicts = schedule.get_minorConflicts()
         conflictsDisplayData = []
         for conflict in majorConflicts + minorConflicts:
-            conflictsDisplayData.append(
-                [conflict.aClass.get_id(), conflict.aClass.get_course().get_name(),
-                 conflict.aClass.get_faculty(), conflict.aClass.get_room().get_building(),
-                 conflict.aClass.get_room().get_room(),
-                 conflict.aClass.get_meetingTime().get_days(), conflict.aClass.get_meetingTime().get_time(),
-                 conflict.aClass.get_meetingTime().get_duration(), conflict.type, conflict.conflictClass,
-                 conflict.severity])
+            # conflict could be that a faculty is not; or assigned less contact hours.
+            if isinstance(conflict.aClass, Class):
+                conflictsDisplayData.append(
+                    [conflict.aClass.get_id(), conflict.aClass.get_course().get_name(),
+                     conflict.aClass.get_faculty(), conflict.aClass.get_room().get_building(),
+                     conflict.aClass.get_room().get_room(),
+                     conflict.aClass.get_meetingTime().get_days(), conflict.aClass.get_meetingTime().get_time(),
+                     conflict.aClass.get_meetingTime().get_duration(), conflict.type, conflict.conflictClass,
+                     conflict.severity])
+            else:
+                conflictsDisplayData.append(
+                    ['N/A', 'N/A',
+                     conflict.aClass.get_name(), 'N/A',
+                     'N/A', 'N/A',
+                     'N/A', 'N/A', conflict.type, conflict.conflictClass,
+                     conflict.severity])
         return conflictsDisplayData
 
     # Function for writing to excel file
     # Used: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_excel.html
 
     def writeSchedule(self, schedule):
-        schedule_df = pd.DataFrame(self.get_scheduleDisplayData(schedule), columns=self.schedule_columns)
-        conflicts_df = pd.DataFrame(self.get_conflictsDisplayData(schedule), columns=self.conflicts_columns)
+        try:
+            schedule_df = pd.DataFrame(self.get_scheduleDisplayData(schedule), columns=self.schedule_columns)
+            conflicts_df = pd.DataFrame(self.get_conflictsDisplayData(schedule), columns=self.conflicts_columns)
 
-        with pd.ExcelWriter('schedule.xlsx') as writer:
-            schedule_df.to_excel(writer, sheet_name='Schedule', index=False)
-            conflicts_df.to_excel(writer, sheet_name='Conflicts', index=False)
+            with pd.ExcelWriter('schedule.xlsx') as writer:
+                schedule_df.to_excel(writer, sheet_name='Schedule', index=False)
+                conflicts_df.to_excel(writer, sheet_name='Conflicts', index=False)
+        except Exception as ex:
+            print("Something went wrong, please check ...\n")
+            print(ex)
 
     def writeAllData(self, schedule):
-        courses_df = pd.DataFrame(self.get_coursesDisplayData(), columns=self.course_columns)
-        classrooms_df = pd.DataFrame(self.get_classroomsDisplayData(), columns=self.classroom_columns)
-        meetingtimes_df = pd.DataFrame(self.get_meetingtimesDisplayData(), columns=self.meeting_times_columns)
+        try:
+            courses_df = pd.DataFrame(self.get_coursesDisplayData(), columns=self.course_columns)
+            classrooms_df = pd.DataFrame(self.get_classroomsDisplayData(), columns=self.classroom_columns)
+            meetingtimes_df = pd.DataFrame(self.get_meetingtimesDisplayData(), columns=self.meeting_times_columns)
 
-        schedule_df = pd.DataFrame(self.get_scheduleDisplayData(schedule), columns=self.schedule_columns)
-        conflicts_df = pd.DataFrame(self.get_conflictsDisplayData(schedule), columns=self.conflicts_columns)
+            schedule_df = pd.DataFrame(self.get_scheduleDisplayData(schedule), columns=self.schedule_columns)
+            conflicts_df = pd.DataFrame(self.get_conflictsDisplayData(schedule), columns=self.conflicts_columns)
 
-        with pd.ExcelWriter('output.xlsx') as writer:
-            courses_df.to_excel(writer, sheet_name='Courses', index=False)
-            classrooms_df.to_excel(writer, sheet_name='Classrooms', index=False)
-            meetingtimes_df.to_excel(writer, sheet_name='Meetingtimes', index=False)
-            schedule_df.to_excel(writer, sheet_name='Schedule', index=False)
-            conflicts_df.to_excel(writer, sheet_name='Conflicts', index=False)
+            with pd.ExcelWriter('output.xlsx') as writer:
+                courses_df.to_excel(writer, sheet_name='Courses', index=False)
+                classrooms_df.to_excel(writer, sheet_name='Classrooms', index=False)
+                meetingtimes_df.to_excel(writer, sheet_name='Meetingtimes', index=False)
+                schedule_df.to_excel(writer, sheet_name='Schedule', index=False)
+                conflicts_df.to_excel(writer, sheet_name='Conflicts', index=False)
+        except Exception as ex:
+            print("Something went wrong, please check ...\n")
+            print(ex)
 
     # Functions for displaying to the console
     def print_available_data(self, schedule):

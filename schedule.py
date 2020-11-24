@@ -18,8 +18,9 @@ class Schedule:
     def initialize(self):
         courses = self._data.get_courses()
 
-        # need to keep track of faculties with no restriction
-        faculty_with_no_restrictions_dict = {}
+        # reset dictionary to start fresh
+        self._data.reset_faculty_assigned_hours_dict()
+
         for course in courses:
             new_class = Class(self._classNum, course)
             self._classNum += 1
@@ -43,6 +44,9 @@ class Schedule:
             random_faculty = self._data.get_faculties(target_class=new_class, random=True)
             if random_faculty:
                 new_class.set_faculty(random_faculty)
+                # keep track of how many contact hours are assigned to a particular faculty
+                self._data.update_faculty_assigned_hours_dict(random_faculty,
+                                                              new_class.get_course().get_numContactHrs())
             else:
                 print('No faculty found to teach the course, please check ...')
                 print("Course = " + course.get_name())
@@ -156,6 +160,29 @@ class Schedule:
                                 self._numberOfMinorConflicts += 1
                                 self._minorConflicts.append(
                                     Conflict(aClass, "Concurrent with too many sections", str(anotherClass), False))
+
+        # Let's check for under-utilized faculty members:
+        faculty_members = self._data.get_faculties()
+        for faculty in faculty_members:
+            # faculty is not assigned any courses!
+            if faculty not in faculty_assigned_hours_dict and faculty.get_name() is not 'Staff':
+                self._numberOfMajorConflicts += 1
+                self._majorConflicts.append(
+                    # Hacking: sending in the faculty instance to be able to print his/her name
+                    Conflict(faculty, "No class assigned to {} - unused contact hours: {}".format(faculty.get_name(),
+                                                                                                  faculty.get_contact_hours())))
+            # faculty is assigned less hours than required contact hours
+            elif faculty in faculty_assigned_hours_dict and faculty.get_name() is not 'Staff':
+                if faculty_assigned_hours_dict[faculty] < faculty.get_contact_hours():
+                    self._numberOfMajorConflicts += 1
+                    self._majorConflicts.append(
+                        # Hacking: sending in the faculty instance to be able to print his/her name
+                        Conflict(faculty,
+                                 "Unused contact hours: {} - current: {}, required: {}".format(faculty.get_name(),
+                                                                                               faculty_assigned_hours_dict[
+                                                                                                   faculty],
+                                                                                               faculty.get_contact_hours())))
+
 
         return 1 / (1.0 * self._numberOfMajorConflicts + 0.5 * self._numberOfMinorConflicts + 1)
 
