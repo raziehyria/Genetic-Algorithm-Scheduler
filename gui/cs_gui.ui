@@ -38,7 +38,7 @@
                     </layout>
                     <child>
                       <object class="tk.Label" id="label_1">
-                        <property name="text" translatable="yes">Full Path to Excel Input File:</property>
+                        <property name="text" translatable="yes">Full Path to Input Excel File:</property>
                         <layout manager="grid">
                           <property name="propagate">True</property>
                           <property name="sticky">w</property>
@@ -51,10 +51,34 @@
                         <property name="type">file</property>
                         <bind sequence="&lt;&lt;PathChooserPathChanged&gt;&gt;" handler="input_path_changed" add="" />
                         <layout manager="grid">
-                          <property name="column">0</property>
+                          <property name="column">1</property>
+                          <property name="padx">3</property>
                           <property name="propagate">True</property>
-                          <property name="row">1</property>
+                          <property name="row">0</property>
                           <property type="row" id="1" name="minsize">0</property>
+                        </layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="pygubu.builder.widgets.pathchooserinput" id="output_file_name">
+                        <property name="mustexist">false</property>
+                        <property name="type">directory</property>
+                        <bind sequence="&lt;&lt;PathChooserPathChanged&gt;&gt;" handler="output_path_changed" add="" />
+                        <layout manager="grid">
+                          <property name="column">1</property>
+                          <property name="padx">5</property>
+                          <property name="propagate">True</property>
+                          <property type="row" id="0" name="pad">0</property>
+                        </layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="tk.Label" id="label_13">
+                        <property name="text" translatable="yes">Output Directory:</property>
+                        <layout manager="grid">
+                          <property name="row">1</property>
+                          <property name="sticky">w</property>
+                          <property type="row" id="0" name="pad">0</property>
                         </layout>
                       </object>
                     </child>
@@ -73,7 +97,7 @@
                         <property name="padx">0</property>
                         <property name="text" translatable="yes">Start</property>
                         <property name="width">7</property>
-                        <bind sequence="&lt;1&gt;&lt;ButtonPress&gt;" handler="start_button_pressed" add="" />
+                        <bind sequence="&lt;ButtonPress&gt;" handler="start_button_pressed" add="" />
                         <layout manager="pack">
                           <property name="padx">5</property>
                           <property name="propagate">False</property>
@@ -86,7 +110,7 @@
                         <property name="foreground">#ff0000</property>
                         <property name="text" translatable="yes">Stop</property>
                         <property name="width">7</property>
-                        <bind sequence="&lt;1&gt;&lt;ButtonPress&gt;" handler="stop_button_pressed" add="" />
+                        <bind sequence="&lt;ButtonPress&gt;" handler="stop_button_pressed" add="" />
                         <layout manager="pack">
                           <property name="padx">5</property>
                           <property name="propagate">False</property>
@@ -105,8 +129,11 @@
                       <property name="side">top</property>
                     </layout>
                     <child>
-                      <object class="ttk.Checkbutton" id="show_execution_stats_btn">
+                      <object class="ttk.Checkbutton" id="show_execution_stats_button">
+                        <property name="offvalue">0</property>
+                        <property name="onvalue">1</property>
                         <property name="text" translatable="yes">Show Execution Stats</property>
+                        <property name="variable">int:show_stats</property>
                         <layout manager="pack">
                           <property name="anchor">w</property>
                           <property name="propagate">True</property>
@@ -115,7 +142,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="pygubu.builder.widgets.tkscrollbarhelper" id="tkscrollbarhelper_1">
+                      <object class="pygubu.builder.widgets.tkscrollbarhelper" id="stats_scrollbar">
                         <property name="scrolltype">both</property>
                         <property name="usemousewheel">true</property>
                         <layout manager="pack">
@@ -124,9 +151,7 @@
                         </layout>
                         <child>
                           <object class="tk.Text" id="execution_stats_text">
-                            <property name="exportselection">true</property>
                             <property name="height">10</property>
-                            <property name="relief">flat</property>
                             <property name="width">50</property>
                             <property name="wrap">none</property>
                             <layout manager="pack">
@@ -165,29 +190,6 @@
                       <property name="propagate">True</property>
                       <property name="side">top</property>
                     </layout>
-                    <child>
-                      <object class="pygubu.builder.widgets.pathchooserinput" id="output_file_name">
-                        <property name="mustexist">false</property>
-                        <property name="type">file</property>
-                        <bind sequence="&lt;&lt;PathChooserPathChanged&gt;&gt;" handler="output_path_changed" add="" />
-                        <layout manager="grid">
-                          <property name="column">1</property>
-                          <property name="padx">5</property>
-                          <property name="propagate">True</property>
-                          <property type="row" id="0" name="pad">0</property>
-                        </layout>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="tk.Label" id="label_13">
-                        <property name="text" translatable="yes">Save Output as:</property>
-                        <layout manager="grid">
-                          <property name="row">0</property>
-                          <property name="sticky">w</property>
-                          <property type="row" id="0" name="pad">0</property>
-                        </layout>
-                      </object>
-                    </child>
                     <child>
                       <object class="tk.Entry" id="pop_entry">
                         <layout manager="grid">
@@ -338,6 +340,15 @@
                   <property name="propagate">True</property>
                   <property name="side">top</property>
                 </layout>
+                <child>
+                  <object class="tk.Label" id="label_3">
+                    <property name="text" translatable="yes">Work in Progress</property>
+                    <layout manager="pack">
+                      <property name="propagate">True</property>
+                      <property name="side">top</property>
+                    </layout>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
@@ -353,6 +364,15 @@
                   <property name="propagate">True</property>
                   <property name="side">top</property>
                 </layout>
+                <child>
+                  <object class="tk.Label" id="label_4">
+                    <property name="text" translatable="yes">Work in Progress</property>
+                    <layout manager="pack">
+                      <property name="propagate">True</property>
+                      <property name="side">top</property>
+                    </layout>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
