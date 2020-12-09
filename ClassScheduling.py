@@ -18,8 +18,7 @@ class ClassScheduling:
         sys.exit(0)
 
     def start(self, execution_stats_text):
-
-        signal.signal(signal.SIGINT, self.my_custom_handler)
+#        signal.signal(signal.SIGINT, self.my_custom_handler)
 
         try:
             config = Config()

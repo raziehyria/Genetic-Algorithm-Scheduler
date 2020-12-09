@@ -9,7 +9,6 @@
     <child>
       <object class="ttk.Notebook" id="notebook">
         <property name="height">0</property>
-        <property name="takefocus">false</property>
         <property name="width">0</property>
         <layout manager="pack">
           <property name="propagate">True</property>
@@ -63,17 +62,14 @@
                 </child>
                 <child>
                   <object class="ttk.Frame" id="frame_15">
-                    <property name="cursor">arrow</property>
-                    <property name="height">0</property>
                     <property name="padding">10</property>
-                    <property name="takefocus">false</property>
-                    <property name="width">0</property>
                     <layout manager="pack">
                       <property name="propagate">True</property>
                       <property name="side">top</property>
                     </layout>
                     <child>
                       <object class="tk.Button" id="start_button">
+                        <property name="foreground">#008000</property>
                         <property name="padx">0</property>
                         <property name="text" translatable="yes">Start</property>
                         <property name="width">7</property>
@@ -87,6 +83,7 @@
                     </child>
                     <child>
                       <object class="tk.Button" id="stop_button">
+                        <property name="foreground">#ff0000</property>
                         <property name="text" translatable="yes">Stop</property>
                         <property name="width">7</property>
                         <bind sequence="&lt;1&gt;&lt;ButtonPress&gt;" handler="stop_button_pressed" add="" />
@@ -100,10 +97,8 @@
                   </object>
                 </child>
                 <child>
-                  <object class="tk.Frame" id="frame_8">
+                  <object class="tk.Frame" id="frame_1_2">
                     <property name="height">200</property>
-                    <property name="text" translatable="yes">text_2abwrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
-</property>
                     <property name="width">200</property>
                     <layout manager="pack">
                       <property name="propagate">True</property>
@@ -121,7 +116,6 @@
                     </child>
                     <child>
                       <object class="pygubu.builder.widgets.tkscrollbarhelper" id="tkscrollbarhelper_1">
-                        <property name="container">false</property>
                         <property name="scrolltype">both</property>
                         <property name="usemousewheel">true</property>
                         <layout manager="pack">
@@ -153,35 +147,44 @@
           <object class="ttk.Notebook.Tab" id="settings_tab">
             <property name="text" translatable="yes">Settings</property>
             <child>
-              <object class="ttk.Frame" id="frame_12">
+              <object class="tk.Frame" id="frame_1">
                 <property name="height">200</property>
-                <property name="text" translatable="yes">Number of Elite Schedules:</property>
                 <property name="width">200</property>
                 <layout manager="pack">
                   <property name="propagate">True</property>
                   <property name="side">top</property>
                 </layout>
                 <child>
-                  <object class="tk.Frame" id="frame_4">
-                    <property name="container">true</property>
+                  <object class="tk.Frame" id="frame_1_2_3_4_5">
                     <property name="height">200</property>
-                    <property name="padx">20</property>
-                    <property name="pady">10</property>
-                    <property name="title" translatable="yes">k</property>
                     <property name="width">200</property>
                     <layout manager="pack">
                       <property name="anchor">w</property>
+                      <property name="padx">20</property>
+                      <property name="pady">20</property>
                       <property name="propagate">True</property>
                       <property name="side">top</property>
                     </layout>
                     <child>
+                      <object class="pygubu.builder.widgets.pathchooserinput" id="output_file_name">
+                        <property name="mustexist">false</property>
+                        <property name="type">file</property>
+                        <bind sequence="&lt;&lt;PathChooserPathChanged&gt;&gt;" handler="output_path_changed" add="" />
+                        <layout manager="grid">
+                          <property name="column">1</property>
+                          <property name="padx">5</property>
+                          <property name="propagate">True</property>
+                          <property type="row" id="0" name="pad">0</property>
+                        </layout>
+                      </object>
+                    </child>
+                    <child>
                       <object class="tk.Label" id="label_13">
                         <property name="text" translatable="yes">Save Output as:</property>
                         <layout manager="grid">
-                          <property name="propagate">True</property>
+                          <property name="row">0</property>
                           <property name="sticky">w</property>
-                          <property type="row" id="0" name="minsize">0</property>
-                          <property type="row" id="0" name="uniform" />
+                          <property type="row" id="0" name="pad">0</property>
                         </layout>
                       </object>
                     </child>
@@ -189,8 +192,8 @@
                       <object class="tk.Entry" id="pop_entry">
                         <layout manager="grid">
                           <property name="column">1</property>
+                          <property name="padx">5</property>
                           <property name="pady">5</property>
-                          <property name="propagate">True</property>
                           <property name="row">1</property>
                           <property name="sticky">w</property>
                         </layout>
@@ -200,8 +203,6 @@
                       <object class="tk.Label" id="label_21">
                         <property name="text" translatable="yes">Number of Elite Schedules:</property>
                         <layout manager="grid">
-                          <property name="column">0</property>
-                          <property name="propagate">True</property>
                           <property name="row">2</property>
                           <property name="sticky">w</property>
                         </layout>
@@ -211,8 +212,8 @@
                       <object class="tk.Entry" id="num_elite_schedules_entry">
                         <layout manager="grid">
                           <property name="column">1</property>
+                          <property name="padx">5</property>
                           <property name="pady">5</property>
-                          <property name="propagate">True</property>
                           <property name="row">2</property>
                           <property name="sticky">w</property>
                         </layout>
@@ -222,8 +223,6 @@
                       <object class="tk.Label" id="label_22">
                         <property name="text" translatable="yes">Mutation Rate:</property>
                         <layout manager="grid">
-                          <property name="column">0</property>
-                          <property name="propagate">True</property>
                           <property name="row">3</property>
                           <property name="sticky">w</property>
                         </layout>
@@ -233,8 +232,8 @@
                       <object class="tk.Entry" id="mutation_rate_entry">
                         <layout manager="grid">
                           <property name="column">1</property>
+                          <property name="padx">5</property>
                           <property name="pady">5</property>
-                          <property name="propagate">True</property>
                           <property name="row">3</property>
                           <property name="sticky">w</property>
                         </layout>
@@ -244,8 +243,6 @@
                       <object class="tk.Label" id="label_23">
                         <property name="text" translatable="yes">Tournament Selection Size:</property>
                         <layout manager="grid">
-                          <property name="column">0</property>
-                          <property name="propagate">True</property>
                           <property name="row">4</property>
                           <property name="sticky">w</property>
                         </layout>
@@ -255,8 +252,8 @@
                       <object class="tk.Entry" id="tournament_selection_size_entry">
                         <layout manager="grid">
                           <property name="column">1</property>
+                          <property name="padx">5</property>
                           <property name="pady">5</property>
-                          <property name="propagate">True</property>
                           <property name="row">4</property>
                           <property name="sticky">w</property>
                         </layout>
@@ -266,8 +263,6 @@
                       <object class="tk.Label" id="label_24">
                         <property name="text" translatable="yes">Maximum Iteration</property>
                         <layout manager="grid">
-                          <property name="column">0</property>
-                          <property name="propagate">True</property>
                           <property name="row">5</property>
                           <property name="sticky">w</property>
                         </layout>
@@ -277,40 +272,26 @@
                       <object class="tk.Entry" id="max_iteration_entry">
                         <layout manager="grid">
                           <property name="column">1</property>
+                          <property name="padx">5</property>
                           <property name="pady">5</property>
-                          <property name="propagate">True</property>
                           <property name="row">5</property>
-                          <property name="sticky">w</property>
+                          <property name="sticky">nw</property>
                         </layout>
                       </object>
                     </child>
                     <child>
                       <object class="tk.Label" id="label_25">
-                        <property name="text" translatable="yes">Population Size</property>
+                        <property name="text" translatable="yes">Population Size:</property>
                         <layout manager="grid">
-                          <property name="column">0</property>
-                          <property name="propagate">True</property>
                           <property name="row">1</property>
                           <property name="sticky">w</property>
-                        </layout>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="pygubu.builder.widgets.pathchooserinput" id="output_file_name">
-                        <property name="mustexist">false</property>
-                        <property name="type">file</property>
-                        <bind sequence="&lt;&lt;PathChooserPathChanged&gt;&gt;" handler="output_path_changed" add="" />
-                        <layout manager="grid">
-                          <property name="column">1</property>
-                          <property name="propagate">True</property>
-                          <property name="row">0</property>
                         </layout>
                       </object>
                     </child>
                   </object>
                 </child>
                 <child>
-                  <object class="tk.Frame" id="frame_1">
+                  <object class="tk.Frame" id="frame_1_2_3">
                     <property name="height">200</property>
                     <property name="padx">5</property>
                     <property name="width">200</property>
