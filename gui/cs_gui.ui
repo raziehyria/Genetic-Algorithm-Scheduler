@@ -1,15 +1,16 @@
 <?xml version='1.0' encoding='utf-8'?>
 <interface version="1.0">
   <object class="tk.Toplevel" id="main_window">
+    <property name="geometry">640x480</property>
     <property name="height">300</property>
-    <property name="minsize">400|300</property>
-    <property name="resizable">both</property>
-    <property name="title" translatable="yes">Course Scheduler</property>
-    <property name="width">400</property>
+    <property name="minsize">600|300</property>
+    <property name="resizable">none</property>
+    <property name="title" translatable="yes">Course Scheduler v1.1</property>
+    <property name="width">600</property>
     <child>
       <object class="ttk.Notebook" id="notebook">
-        <property name="height">0</property>
-        <property name="width">0</property>
+        <property name="height">480</property>
+        <property name="width">640</property>
         <layout manager="pack">
           <property name="propagate">True</property>
           <property name="side">top</property>
@@ -17,7 +18,7 @@
         <child>
           <object class="ttk.Notebook.Tab" id="class_scheduling_tab">
             <property name="compound">top</property>
-            <property name="text" translatable="yes">Class Scheduling</property>
+            <property name="text" translatable="yes">Course Scheduling</property>
             <child>
               <object class="ttk.Frame" id="frame_11">
                 <property name="height">200</property>
@@ -38,7 +39,7 @@
                     </layout>
                     <child>
                       <object class="tk.Label" id="label_1">
-                        <property name="text" translatable="yes">Full Path to Input Excel File:</property>
+                        <property name="text" translatable="yes">Select Input Excel File:</property>
                         <layout manager="grid">
                           <property name="propagate">True</property>
                           <property name="sticky">w</property>
@@ -49,13 +50,13 @@
                       <object class="pygubu.builder.widgets.pathchooserinput" id="input_file_name">
                         <property name="mustexist">true</property>
                         <property name="type">file</property>
-                        <bind sequence="&lt;&lt;PathChooserPathChanged&gt;&gt;" handler="input_path_changed" add="" />
+                        <bind add="" handler="input_path_changed" sequence="&lt;&lt;PathChooserPathChanged&gt;&gt;"/>
                         <layout manager="grid">
                           <property name="column">1</property>
                           <property name="padx">3</property>
                           <property name="propagate">True</property>
                           <property name="row">0</property>
-                          <property type="row" id="1" name="minsize">0</property>
+                          <property id="1" name="minsize" type="row">0</property>
                         </layout>
                       </object>
                     </child>
@@ -63,22 +64,22 @@
                       <object class="pygubu.builder.widgets.pathchooserinput" id="output_file_name">
                         <property name="mustexist">false</property>
                         <property name="type">directory</property>
-                        <bind sequence="&lt;&lt;PathChooserPathChanged&gt;&gt;" handler="output_path_changed" add="" />
+                        <bind add="" handler="output_path_changed" sequence="&lt;&lt;PathChooserPathChanged&gt;&gt;"/>
                         <layout manager="grid">
                           <property name="column">1</property>
                           <property name="padx">5</property>
                           <property name="propagate">True</property>
-                          <property type="row" id="0" name="pad">0</property>
+                          <property id="0" name="pad" type="row">0</property>
                         </layout>
                       </object>
                     </child>
                     <child>
                       <object class="tk.Label" id="label_13">
-                        <property name="text" translatable="yes">Output Directory:</property>
+                        <property name="text" translatable="yes">Select Output Directory:</property>
                         <layout manager="grid">
                           <property name="row">1</property>
                           <property name="sticky">w</property>
-                          <property type="row" id="0" name="pad">0</property>
+                          <property id="0" name="pad" type="row">0</property>
                         </layout>
                       </object>
                     </child>
@@ -97,7 +98,7 @@
                         <property name="padx">0</property>
                         <property name="text" translatable="yes">Start</property>
                         <property name="width">7</property>
-                        <bind sequence="&lt;ButtonPress&gt;" handler="start_button_pressed" add="" />
+                        <bind add="" handler="start_button_pressed" sequence="&lt;ButtonPress&gt;"/>
                         <layout manager="pack">
                           <property name="padx">5</property>
                           <property name="propagate">False</property>
@@ -110,7 +111,7 @@
                         <property name="foreground">#ff0000</property>
                         <property name="text" translatable="yes">Stop</property>
                         <property name="width">7</property>
-                        <bind sequence="&lt;ButtonPress&gt;" handler="stop_button_pressed" add="" />
+                        <bind add="" handler="stop_button_pressed" sequence="&lt;ButtonPress&gt;"/>
                         <layout manager="pack">
                           <property name="padx">5</property>
                           <property name="propagate">False</property>
@@ -122,8 +123,8 @@
                 </child>
                 <child>
                   <object class="tk.Frame" id="frame_1_2">
-                    <property name="height">200</property>
-                    <property name="width">200</property>
+                    <property name="height">400</property>
+                    <property name="width">400</property>
                     <layout manager="pack">
                       <property name="propagate">True</property>
                       <property name="side">top</property>
@@ -151,8 +152,8 @@
                         </layout>
                         <child>
                           <object class="tk.Text" id="execution_stats_text">
-                            <property name="height">10</property>
-                            <property name="width">50</property>
+                            <property name="height">50</property>
+                            <property name="width">100</property>
                             <property name="wrap">none</property>
                             <layout manager="pack">
                               <property name="propagate">True</property>
@@ -170,11 +171,11 @@
         </child>
         <child>
           <object class="ttk.Notebook.Tab" id="settings_tab">
-            <property name="text" translatable="yes">Settings</property>
+            <property name="text" translatable="yes">Advanced Settings</property>
             <child>
               <object class="tk.Frame" id="frame_1">
                 <property name="height">200</property>
-                <property name="width">200</property>
+                <property name="width">50</property>
                 <layout manager="pack">
                   <property name="propagate">True</property>
                   <property name="side">top</property>
@@ -182,7 +183,7 @@
                 <child>
                   <object class="tk.Frame" id="frame_1_2_3_4_5">
                     <property name="height">200</property>
-                    <property name="width">200</property>
+                    <property name="width">400</property>
                     <layout manager="pack">
                       <property name="anchor">w</property>
                       <property name="padx">20</property>
@@ -304,7 +305,7 @@
                     <child>
                       <object class="tk.Button" id="save_settings_button">
                         <property name="text" translatable="yes">Save</property>
-                        <bind sequence="&lt;ButtonPress&gt;" handler="save_button_pressed" add="" />
+                        <bind add="" handler="save_button_pressed" sequence="&lt;ButtonPress&gt;"/>
                         <layout manager="pack">
                           <property name="expand">false</property>
                           <property name="ipadx">0</property>
@@ -317,6 +318,7 @@
                     <child>
                       <object class="tk.Button" id="button_2">
                         <property name="text" translatable="yes">Reset Settings</property>
+                        <bind add="" handler="reset_settings_pressed" sequence="&lt;ButtonPress&gt;"/>
                         <layout manager="pack">
                           <property name="propagate">True</property>
                           <property name="side">right</property>
@@ -341,8 +343,12 @@
                   <property name="side">top</property>
                 </layout>
                 <child>
-                  <object class="tk.Label" id="label_3">
-                    <property name="text" translatable="yes">Work in Progress</property>
+                  <object class="tk.Text" id="text_2">
+                    <property name="height">10</property>
+                    <property name="text" translatable="yes">For the application README file, please visit:
+                      https://bit.ly/psu_cs_readme
+                    </property>
+                    <property name="width">100</property>
                     <layout manager="pack">
                       <property name="propagate">True</property>
                       <property name="side">top</property>
@@ -365,8 +371,32 @@
                   <property name="side">top</property>
                 </layout>
                 <child>
-                  <object class="tk.Label" id="label_4">
-                    <property name="text" translatable="yes">Work in Progress</property>
+                  <object class="tk.Text" id="text_1">
+                    <property name="height">50</property>
+                    <property name="text" translatable="yes">**** Course Scheduling Application: Version 1.1 ****
+
+                      This application is developed as part of the "CMPSC 487W: Software Engineering" course at the
+                      Pennsylvania State University - Abington. Special thanks to Prof. Zafer Hatahet, Division Head,
+                      Science and Engineering for his valuable input and feedback.
+
+                      It is inspired by the "Genetic Algorithms Class Scheduling w/ Python Tutorial" available at
+                      YouTube: https://youtu.be/8NrNX_jCkjw
+
+                      Project Contributors:
+
+                      David Martinez
+                      (https://www.linkedin.com/in/davidmartinez1011/)
+
+                      Alec Goldenberg
+                      (https://www.linkedin.com/in/alec-goldenberg/)
+
+                      Ishtiaque Hussain
+                      (https://www.linkedin.com/in/ishtiaquehussain/)
+
+                      For questions, please contact: ihussain@psu.edu
+                    </property>
+                    <property name="width">100</property>
+                    <property name="wrap">word</property>
                     <layout manager="pack">
                       <property name="propagate">True</property>
                       <property name="side">top</property>
