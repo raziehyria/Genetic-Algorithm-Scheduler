@@ -59,7 +59,7 @@ class CourseSchedulingApp:
         self.execution_stats_text.delete('1.0', 'end')
         self.execution_stats_text.insert('end', 'Processing, please wait ...')
 
-        # if start button not clicked already
+
         if self.config.get_FILE_PATH() is None:
             self.execution_stats_text.insert('end', '\nRequired! Please specify the input file ...\n')
             self.execution_stats_text.update()
@@ -70,6 +70,7 @@ class CourseSchedulingApp:
             self.execution_stats_text.update()
             return
 
+        # if start button not clicked already
         if not self.start_button_clicked:
             self.start_button_clicked = True
             self.stop_scheduling = False
@@ -106,30 +107,32 @@ class CourseSchedulingApp:
         os.chdir(path)
 
     def save_button_pressed(self, event=None):
-        population = self.population_entry.get()
-        num_elite_schedule = self.num_elite_schedules.get()
-        mutation_rate = self.mutation_rate.get()
-        tournament_size = self.tournament_size.get()
-        max_iteration = self.max_iteration.get()
+        # if 'Start' button is not already clicked
+        if not self.start_button_clicked:
+            population = self.population_entry.get()
+            num_elite_schedule = self.num_elite_schedules.get()
+            mutation_rate = self.mutation_rate.get()
+            tournament_size = self.tournament_size.get()
+            max_iteration = self.max_iteration.get()
 
-        try:
-            population = int(population)
-            num_elite_schedule = int(num_elite_schedule)
-            mutation_rate = float(mutation_rate)
-            tournament_size = int(tournament_size)
-            max_iteration = int(max_iteration)
+            try:
+                population = int(population)
+                num_elite_schedule = int(num_elite_schedule)
+                mutation_rate = float(mutation_rate)
+                tournament_size = int(tournament_size)
+                max_iteration = int(max_iteration)
 
-            self.config.set_POPULATION_SIZE(population)
-            self.config.set_NUM_OF_ELITE_SCHEDULES(num_elite_schedule)
-            self.config.set_MUTATION_RATE(mutation_rate)
-            self.config.set_TOURNAMENT_SELECTION_SIZE(tournament_size)
-            self.config.set_MAX_ITERATION(max_iteration)
+                self.config.set_POPULATION_SIZE(population)
+                self.config.set_NUM_OF_ELITE_SCHEDULES(num_elite_schedule)
+                self.config.set_MUTATION_RATE(mutation_rate)
+                self.config.set_TOURNAMENT_SELECTION_SIZE(tournament_size)
+                self.config.set_MAX_ITERATION(max_iteration)
 
-        except Exception as ex:
-            print(ex)
-            self.execution_stats_text.insert('end', 'Please correct the settings values, reverting to default.\n')
-            self.execution_stats_text.update()
-            self.reset_settings_pressed()
+            except Exception as ex:
+                print(ex)
+                self.execution_stats_text.insert('end', 'Please correct the settings values, reverting to default.\n')
+                self.execution_stats_text.update()
+                self.reset_settings_pressed()
 
     def reset_settings_pressed(self, event=None):
         # TODO: hard coded for now
