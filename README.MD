@@ -39,3 +39,8 @@ and run `npm install`. You only have to do this one time.
 2. Run Flask with `python -m flask run`
 3. Navigate to `webapp` directory
 4. Run `npm start` to launch the webapp
+
+
+
+*For more information*:
+https://docs.google.com/document/d/1hrPahWyVSWL596jP1vAtecgKZBnhjUHVqU1jUHVvA0M/edit?usp=sharing
