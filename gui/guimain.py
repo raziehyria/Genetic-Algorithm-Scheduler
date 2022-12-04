@@ -1,8 +1,10 @@
 import os
+import sys
 from threading import Thread
 
 import pygubu
 
+sys.path.insert(1, '/home/john/raz/487W')
 from ClassScheduling import ClassScheduling
 from config import Config
 
@@ -20,7 +22,7 @@ class CourseSchedulingApp:
 
         # 2: Load an ui file
         # file in xml format
-        builder.add_from_file('cs_gui.ui')
+        builder.add_from_file('/home/john/raz/487W/gui/cs_gui.ui')
 
         # 3: Create the mainwindow
         self.mainwindow = builder.get_object('main_window')

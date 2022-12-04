@@ -19,13 +19,15 @@ class Config:
         if Config.__singletonConfig is not None:
             raise Exception("This is a singleton class, cannot instantiate")
         else:
-            self._FILE_PATH = None
+            self._FILE_PATH = '../uploads/Course_list_and_attributes.xlsx'
             self._POPULATION_SIZE = 23
             self._NUM_OF_ELITE_SCHEDULES = 2
             self._MUTATION_RATE = 0.002  # originally at 0.1
             self._TOURNAMENT_SELECTION_SIZE = 7
             self._MAX_ITERATION = 600
-            self._data = None
+            #  self._MAX_ITERATION = 1
+            #  self._data = None
+            self._data = Data(self._FILE_PATH)
             Config.__singletonConfig = self
 
     def get_POPULATION_SIZE(self):

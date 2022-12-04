@@ -1,28 +1,35 @@
+import requests
 from datetime import datetime
+from threading import Thread
 
 from config import Config
 from display.display import DisplayMgr
 from geneticalgorithm import GeneticAlgorithm
 from population import Population
+from threading import Timer
 
 
 class ClassScheduling:
 
-    def start(self, cs_app):
-        # getting all widgets from app class that are used here to update gui
-        execution_stats_text = cs_app.execution_stats_text
-
+    def __init__(self):
         #  added the try-catch block because I was getting exception error from the Config class
         try:
-            config = Config()
+            self.config = Config()
         except Exception:
-            config = Config.getInstance()
+            self.config = Config.getInstance()
 
+
+    def stop(self):
+        requests.get('http://localhost:5000/stop')
+
+    def start(self):
+        # getting all widgets from app class that are used here to update gui
         start_time = datetime.now()
+        self.progress_percent = 0
 
         self.display_manager = DisplayMgr()
-        population = Population(config.get_POPULATION_SIZE())
-        genAlgo = GeneticAlgorithm(config)
+        population = Population(self.config.get_POPULATION_SIZE())
+        genAlgo = GeneticAlgorithm(self.config)
 
         population.sort_schedules()
 
@@ -30,10 +37,19 @@ class ClassScheduling:
         no_change_count = 0
         prev_fitness = 0
 
-        while no_change_count < config.get_MAX_ITERATION():
-            # check if stop button pressed
-            if cs_app.stop_scheduling:
-                break
+        highest_no_change_count = 0
+
+        is_running = True
+        while no_change_count < self.config.get_MAX_ITERATION() and is_running is True:
+            if no_change_count > highest_no_change_count:
+                highest_no_change_count = no_change_count
+
+            self.progress_percent = round((highest_no_change_count / self.config.get_MAX_ITERATION()) * 100)
+
+            # Checks the `is_running` value in flask's app.py
+            # The website user sets `is_running` to false with the frontend stop button
+            r = requests.get('http://localhost:5000/is_running_status')
+            is_running = r.json().get('is_running')
 
             self.best_schedule = population.get_schedules()[0]
             self.best_schedule_fitness = self.best_schedule.get_fitness()
@@ -47,18 +63,13 @@ class ClassScheduling:
                 no_change_count = 0
                 prev_fitness = self.best_schedule_fitness
 
+            # If the looping is done
+            if no_change_count >= self.config.get_MAX_ITERATION():
+                self.progress_percent = 0
+
+
             time_since_start = datetime.now() - start_time
             # adding string formatting for pretty print: https://mkaz.blog/code/python-string-format-cookbook/
-            if cs_app.show_stats():  # if checkbox toggled then we show them
-                stats = "Generation Number: {} \nNumber of Conflicts (Major : Minor) = {} : {} \nUnchanged Count = {} \nRunning for: {}\n\n".format(
-                    generationCount,
-                    self.best_schedule.get_numberofMajorConflicts(),
-                    self.best_schedule.get_numberofMinorConflicts(),
-                    no_change_count, time_since_start)
-                stats += "To stop and get the best schedule so far, please click the 'Stop' button."
-                execution_stats_text.delete('1.0', 'end')
-                execution_stats_text.insert("end", "\n" + stats)
-                execution_stats_text.update()
 
         self.display_manager.writeSchedule(self.best_schedule)
         end_time = datetime.now()
@@ -66,8 +77,3 @@ class ClassScheduling:
         closing_remarks = "\nTotal execution time = {}.".format(end_time - start_time)
         closing_remarks += "\nResults generated, look for the 'schedule.xlsx' file in your specified \noutput directory.\n"
         closing_remarks += "\nPlease close this window to quit. Thanks!"
-
-        execution_stats_text.insert("end", "\n" + closing_remarks)
-        execution_stats_text.see("end")
-        execution_stats_text.update()
-        cs_app.start_button_clicked = False
