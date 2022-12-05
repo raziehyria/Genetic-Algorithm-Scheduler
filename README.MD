@@ -56,10 +56,10 @@ To combat this issue,
 1. Navigate to the Project Folder -> ClassScheduling.py
 2. Replace lines 51 & 52 with the following:
 
-`try:..
-    ...is_running = r.json().get('is_running')..
+...`try:
+    is_running = r.json().get('is_running')
 except:
-    ...is_running = True`..
+    is_running = True`..
  
  This should allow for consistent checking of the website status.
     
