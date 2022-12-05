@@ -80,7 +80,7 @@ To do this,
 
 
 # Video
-[![Demo](https://markdown-videos.deta/youtube/https://www.youtube.com/watch?v=BXaJ-nTZHqY&t=8s)](https://youtu.be/https://www.youtube.com/watch?v=BXaJ-nTZHqY&t=8s)
+[![Scheduler Web App Demo](http://img.youtube.com/vi/BXaJ-nTZHqY&t/0.jpg)](http://www.youtube.com/watch?v=BXaJ-nTZHqY&t "Scheduler Web App Demo")
 
 *For more information*:
 https://docs.google.com/document/d/1hrPahWyVSWL596jP1vAtecgKZBnhjUHVqU1jUHVvA0M/edit?usp=sharing
