@@ -49,7 +49,7 @@ Make sure to use the most recent version of python, *ideally* 3.10.8 and up.
 Adjust the Python interpretter settings in your IDE and ensure the most recent version is being used for the project environment.
 
 ### Bad JSON Request
-The json.get() request can sometimes run inconsistently and break the connection with Flask, if the reponse is not valid and throws the following error:
+The json.get() request can sometimes run inconsistently and break the connection with Flask if the reponse is not valid, and then throws the following error:
 > requests.exceptions.JSONDecodeError
 
 To combat this issue,
