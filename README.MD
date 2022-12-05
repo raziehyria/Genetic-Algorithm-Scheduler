@@ -80,7 +80,7 @@ To do this,
 
 
 # Video
-[![Demo](https://markdown-videos.deta/youtube/{https://www.youtube.com/watch?v=BXaJ-nTZHqY&t=8s})](https://youtu.be/{https://www.youtube.com/watch?v=BXaJ-nTZHqY&t=8s})
+[![Demo](https://markdown-videos.deta/youtube/https://www.youtube.com/watch?v=BXaJ-nTZHqY&t=8s)](https://youtu.be/https://www.youtube.com/watch?v=BXaJ-nTZHqY&t=8s)
 
 *For more information*:
 https://docs.google.com/document/d/1hrPahWyVSWL596jP1vAtecgKZBnhjUHVqU1jUHVvA0M/edit?usp=sharing
