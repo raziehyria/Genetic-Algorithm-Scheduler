@@ -48,7 +48,7 @@ class ClassScheduling:
 
             # Checks the `is_running` value in flask's app.py
             # The website user sets `is_running` to false with the frontend stop button
-            r = requests.get('http://localhost:5000/is_running_status')
+            r = requests.get('http://localhost:5000/is_running_status', headers=headers)
             is_running = r.json().get('is_running')
 
             self.best_schedule = population.get_schedules()[0]
