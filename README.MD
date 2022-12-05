@@ -51,15 +51,17 @@ Adjust the Python interpretter settings in your IDE and ensure the most recent v
 ### Bad JSON Request
 The json.get() request can sometimes run inconsistently and break the connection with Flask, if the reponse is not valid and throws the following error:
 > requests.exceptions.JSONDecodeError
+
 To combat this issue,
 
 1. Navigate to the Project Folder -> ClassScheduling.py
 2. Replace lines 51 & 52 with the following:
 
-...`try:
+```try:
     is_running = r.json().get('is_running')
 except:
-    is_running = True`..
+    is_running = True
+ ```
  
  This should allow for consistent checking of the website status.
     
