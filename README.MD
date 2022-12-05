@@ -80,7 +80,7 @@ To do this,
 
 
 # Video
-https://www.youtube.com/watch?time_continue=8&v=BXaJ-nTZHqY&feature=emb_logo
+[![Scheduler App Demo](https://img.youtube.com/vi/https://www.youtube.com/watch?v=BXaJ-nTZHqY&t=8s/0.jpg)](https://www.youtube.com/watch?v=https://www.youtube.com/watch?v=BXaJ-nTZHqY&t=8s)
 
 *For more information*:
 https://docs.google.com/document/d/1hrPahWyVSWL596jP1vAtecgKZBnhjUHVqU1jUHVvA0M/edit?usp=sharing
