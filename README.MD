@@ -1,4 +1,5 @@
 # Initial Project Setup
+*SEE TROUBLESHOOTING "FILE PATH" BEFORE RUNNING PROGRAM"
 This is the initial setup you need to do on your machine to get everything up and running,
 after you have done this, you can skip this section and go straight to the `Running the server and webapp section`
 ## Flask Setup
@@ -41,6 +42,38 @@ and run `npm install`. You only have to do this one time.
 4. Run `npm start` to launch the webapp
 
 
+# Troubleshooting
+
+##### Python Version
+Make sure to use the most recent version of python, *ideally* 3.10.8 and up. 
+Adjust the Python interpretter settings in your IDE and ensure the most recent version is being used for the project enviornment.
+
+##### Bad JSON Request
+The json.get() request runs inconsistently sometimes and breaks the connection with Flask if the reponse is not valid by throwing the following error:
+> requests.exceptions.JSONDecodeError
+To combat this issue,
+
+1. Navigate to the Project Folder -> ClassScheduling.py
+2. Replace lines 51 & 52 with the following:
+
+`try:
+    is_running = r.json().get('is_running')
+except:
+    is_running = True`
+ 
+ This should allow for consistent checking of the website status.
+    
+##### File Path
+Before running the application, you need to feed the program a base file.
+To do this, 
+
+1. Access the Project Folder, and move the "Course list and attributes(1).xlsx" file elsewhere, i.e your desktop or your documents. You will use this later.
+2. Make a copy of the "Course list and attributes(1).xlsx", from wherever you placed it, and paste it into the Project Folder.
+3. Rename the copied file to "default", or something arbitrary.
+4. Open the project in your IDE, Navigate to Project folder -> config.py
+5. Replace line 22, with the following or what you renamed your copy to:
+`self._FILE_PATH = './default.xlsx'` 
+6. Save and repeat the steps to run the server/wepapp listed above.
 
 *For more information*:
 https://docs.google.com/document/d/1hrPahWyVSWL596jP1vAtecgKZBnhjUHVqU1jUHVvA0M/edit?usp=sharing
