@@ -54,7 +54,7 @@ The json.get() request can sometimes run inconsistently and break the connection
 
 To combat this issue,
 
-1. Navigate to the Project Folder -> ClassScheduling.py
+1. Navigate to the Project Folder -> `ClassScheduling.py`
 2. Replace lines 51 & 52 with the following:
 
 ```
@@ -73,7 +73,7 @@ To do this,
 1. Access the Project Folder, and move the "Course list and attributes(1).xlsx" file elsewhere, i.e your desktop or your documents. You will use this later.
 2. Make a copy of the "Course list and attributes(1).xlsx", from wherever you placed it, and paste it into the Project Folder.
 3. Rename the copied file to "default", or something arbitrary.
-4. Open the project in your IDE, Navigate to Project folder -> config.py
+4. Open the project in your IDE, Navigate to Project folder -> `config.py`.
 5. Replace line 22, with the following or what you renamed your copy to:
 `self._FILE_PATH = './default.xlsx'` 
 6. Save and repeat the steps to run the server/wepapp listed above.
