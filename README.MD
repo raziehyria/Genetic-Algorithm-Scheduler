@@ -57,7 +57,8 @@ To combat this issue,
 1. Navigate to the Project Folder -> ClassScheduling.py
 2. Replace lines 51 & 52 with the following:
 
-```try:
+```
+try:
     is_running = r.json().get('is_running')
 except:
     is_running = True
